@@ -33,11 +33,16 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
+  const ts = new Date();
+  const isoDate = ts.toISOString();
+
+  const date = isoDate.substr(0, 9);
+
   newsApi.v2.everything({
     sources: 'cbc-news,the-globe-and-mail',
     domains: 'thestar.com,nationalpost.com',
     sortBy: 'popularity',
-    from: '2018-01-28',
+    from: date,
   }).then(response => {
     res.send(response);
   });
