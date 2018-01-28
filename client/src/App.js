@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import EntryWrapper from './components/EntryWrapper';
+
 import './App.css';
 
 class App extends Component {
-
   constructor() {
     super();
 
@@ -11,7 +11,7 @@ class App extends Component {
 
     this.state = {
       results: '',
-      posts: []
+      entries: []
     }
   }
 
@@ -19,7 +19,7 @@ class App extends Component {
     this.callApi()
       .then(res => this.setState({
         results: res.totalResults,
-        posts: res.articles
+        entries: res.articles
       }))
       .catch(err => console.log(err));
   }
@@ -39,10 +39,10 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">NewsFeed</h1>
         </header>
         <p className="App-intro">Total Results: {this.state.results}</p>
+        <EntryWrapper entries={this.state.entries}/>
       </div>
     );
   }
