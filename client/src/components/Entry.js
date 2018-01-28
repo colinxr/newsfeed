@@ -6,10 +6,14 @@ class Entry extends Component {
     const entry = this.props.entryInfo;
 
     return (
-      <div className="Entry">
-        <div className="entry__main"><a href={entry.url} className="entry__main__link"><h2>{entry.title}</h2></a>
-        <h4 className="entry__main__source">{entry.source.name}</h4>
-        <p className="entry__main__desc">{entry.description}</p>
+      <div className="feed-story">
+        <header className="feed-story__header">
+          <div className="feed-story__img-wrap"><a href={entry.url} className="feed-story__title-link"><img src={entry.urlToImage} alt="" className="feed-story__img" /></a></div>
+          <h2 clasName="feed-story__title entry-title"><a href={entry.url} className="feed-story__title-link">{entry.title}</a></h2>
+          <h4 className="feed-story__source">{entry.source.name}</h4>
+        </header>
+        <div className="feed-story__description">
+          <p>{entry.description}</p>
         </div>
       </div>
     );

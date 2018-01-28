@@ -1,5 +1,13 @@
-.entry {
+.feed-story {
   text-align: left;
+}
+.feed-story__img-wrap {
+  max-height: 167px;
+  overflow: hidden;
+}
+
+.feed-story__img {
+  width: 100%;
 }
 
 a {
