@@ -4,6 +4,8 @@ const newsApi = new NewsAPI(process.env.API_KEY)
 const Entry = require('./models/Entry');
 const routes = require('express').Router();
 
+const controller = require('./entryController');
+
 routes.get('/', (req, res) => {
   res.json({ express: 'Hello from express' });
 });
@@ -32,6 +34,15 @@ routes.get('/api', (req, res) => {
   // 1. Bring in more sources
   // 2. find way to sort, score and analyze
   // 3. combine articles into buckets
+});
+
+routes.get('/api/entries', (req, res) => {
+  Entry.find()
+    .then(data => {
+      res.send(data);
+    }).catch(err =>{
+      res.send(err);
+    });
 });
 
 routes.post('/api/entries', (req, res) => {
