@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import EntryWrapper from './components/EntryWrapper';
+
+import EntryWrapper from './EntryWrapper';
 
 import './App.css';
 
@@ -26,7 +27,7 @@ class App extends Component {
 
   callApi = async () => {
     const response = await fetch('/api');
-    console.log(response);
+    console.log(response.body);
     const body = await response.json();
     console.log(body);
 

@@ -1,11 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const NewsAPI = require('newsapi');
+const path = require('path');
+const expressValidator = require('express-validator');
 
 require('dotenv').config({ path: 'config.env' });
 
-const newsApi = new NewsAPI(process.env.API_KEY)
+const routes = require('./routes');
 
 mongoose.connect(process.env.DATABASE, { useMongoClient: true });
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
@@ -28,32 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-  res.send({ express: 'Hello from express' });
-});
-
-app.get('/api', (req, res) => {
-  const ts = new Date();
-  const isoDate = ts.toISOString();
-
-  const date = isoDate.substr(0, 9);
-
-  newsApi.v2.everything({
-    sources: 'cbc-news,the-globe-and-mail,financial-post',
-    domains: 'thestar.com,blogto.com',
-    sortBy: 'publishedAt',
-    from: date,
-  }).then(response => {
-    res.send(response);
-  });
-
-  // To Do
-  // 1. Bring in more sources
-  // 2. find way to sort, score and analyze
-  // 3. combine articles into buckets
-
-
-});
+app.use('/', routes);
 
 app.set('port', process.env.PORT || 3001);
 const server = app.listen(app.get('port'), () => {
