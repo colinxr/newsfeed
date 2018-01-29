@@ -1,23 +1,14 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 import './Entry.css';
 
 class Entry extends Component {
   constructor() {
     super();
 
-    this.state = {
-      entry: {
-        url: '',
-        urltoImage: '',
-        title: '',
-        originalTitle: '',
-        date: '',
-        source: '',
-        description: ''
-      }
-    };
-
     this.handleClick = this.handleClick.bind(this);
+    this.apiPost = this.apiPost.bind(this);
   }
 
   handleClick(e) {
@@ -29,14 +20,28 @@ class Entry extends Component {
       description: entry.description,
       originalTitle: entry.title,
       title: entry.title,
-      source: this.source.name,
+      source: entry.source.name,
       url: entry.url,
       urltoImage: entry.urlToImage,
     }
     console.log(entryObj);
-    // To do
-    // Axios Post the api endpoint
 
+    this.apiPost(entryObj)
+      .then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      });
+  }
+
+  apiPost = async (obj) => {
+    const response = await axios.post('/api/entries', obj);
+    console.log(response);
+    const body = await response.data;
+
+    if (response.status !== 200) throw Error(body.message);
+
+    return body;
   }
 
   render() {

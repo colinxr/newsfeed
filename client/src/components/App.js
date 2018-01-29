@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import EntryWrapper from './EntryWrapper';
 
@@ -26,13 +27,9 @@ class App extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch('/api');
-    console.log(response.body);
-    const body = await response.json();
-    console.log(body);
-
+    const response = await axios('/api');
+    const body = await response.data;
     if (response.status !== 200) throw Error(body.message);
-
     return body;
   };
 
