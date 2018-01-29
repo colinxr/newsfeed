@@ -1,5 +1,6 @@
 .feed-story {
   text-align: left;
+  margin-bottom: 35px;
 }
 .feed-story__img-wrap {
   max-height: 167px;
@@ -19,14 +20,20 @@ a:hover {
   text-decoration: underline;
 }
 
+h2, h4 {
+  margin-bottom: 0;
+}
+
 h2 {
   font-family: helvetica, arial, sans-serif;
   font-size: 21pt;
+  margin-top: 18px;
 }
 
 h4 {
-  font-size: 12pt;
   color: #999;
+  font-size: 12pt;
+  margin-top: 7px;
 }
 
 p {

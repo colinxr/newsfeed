@@ -39,13 +39,20 @@ app.get('/api', (req, res) => {
   const date = isoDate.substr(0, 9);
 
   newsApi.v2.everything({
-    sources: 'cbc-news,the-globe-and-mail',
-    domains: 'thestar.com,nationalpost.com',
-    sortBy: 'popularity',
+    sources: 'cbc-news,the-globe-and-mail,financial-post',
+    domains: 'thestar.com,blogto.com',
+    sortBy: 'publishedAt',
     from: date,
   }).then(response => {
     res.send(response);
   });
+
+  // To Do
+  // 1. Bring in more sources
+  // 2. find way to sort, score and analyze
+  // 3. combine articles into buckets
+
+
 });
 
 app.set('port', process.env.PORT || 3001);
