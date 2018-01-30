@@ -3,25 +3,25 @@ import axios from 'axios';
 
 import EntryWrapper from './EntryWrapper';
 
-import './App.css';
+import './Admin.css';
 
-class App extends Component {
+class Admin extends Component {
   constructor() {
     super();
-
-    this.callApi = this.callApi.bind(this);
 
     this.state = {
       results: '',
       entries: []
     }
+
+    this.callApi = this.callApi.bind(this);
   }
 
   componentDidMount() {
     this.callApi()
-      .then(res => this.setState({
-        results: res.totalResults,
-        entries: res.articles
+      .then(resp => this.setState({
+        results: resp.totalResults,
+        entries: resp.articles
       }))
       .catch(err => console.log(err));
   }
@@ -35,15 +35,14 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">NewsFeed</h1>
+      <div className="Admin">
+        <header className="Admin-header">
+          <h1 className="Admin-title">A1: NewsFeed</h1>
         </header>
-        <p className="App-intro">Total Results: {this.state.results}</p>
         <EntryWrapper entries={this.state.entries}/>
       </div>
     );
   }
 }
 
-export default App;
+export default Admin;
