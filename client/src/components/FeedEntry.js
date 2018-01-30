@@ -54,8 +54,8 @@ class FeedEntry extends Component {
         </div>
         <div className="feed-entry__body">
           <header>
-            <h4>{article.source.name}</h4>
             <h2 className="feed-entry__title article-title"><a href={article.url} className="feed-entry__title-link">{article.title}</a></h2>
+            <h4>{article.source.name}</h4>
           </header>
         <div className="feed-entry__description">
           <p>{article.description}</p>

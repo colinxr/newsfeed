@@ -13,7 +13,6 @@ class Admin extends Component {
       articles: [],
     }
 
-    //this.callApi = this.callApi.bind(this);
     this.getPosts = this.getPosts.bind(this);
     this.getArticles = this.getArticles.bind(this);
   }
@@ -26,28 +25,11 @@ class Admin extends Component {
           articles: articles.data.articles
         });
       })
-    // this.callApi()
-    //   .then(resp => this.setState({
-    //     articles: resp.articles
-    //   }))
-    //   .catch(err => console.log(err));
   }
 
-  // callApi = async () => {
-  //   const response = await axios('/api');
-  //   const body = await response.data;
-  //   if (response.status !== 200) throw Error(body.message);
-  //   return body;
-  // };
+  getPosts = () => { return axios.get('api/entries'); }
 
-  getPosts() {
-    return axios.get('api/entries');
-  }
-
-  getArticles() {
-    return axios.get('/api');
-  }
-
+  getArticles = () => { return axios.get('/api'); }
 
   render() {
     return (
@@ -56,12 +38,14 @@ class Admin extends Component {
           <h1 className="Admin-title">A1: NewsFeed</h1>
         </header>
         <div className="wrapper">
-          {
-            Object
-            .keys(this.state.articles)
-            .map(key => <FeedEntry key={key} index={key}
-              articleInfo={this.state.articles[key]} />)
-          }
+          <div className="feed-entries">
+            {
+              Object
+              .keys(this.state.articles)
+              .map(key => <FeedEntry key={key} index={key}
+                articleInfo={this.state.articles[key]} />)
+            }
+          </div>
         </div>
       </div>
     );

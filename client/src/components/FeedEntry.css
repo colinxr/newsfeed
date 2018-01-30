@@ -1,14 +1,15 @@
 .feed-entry {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 130px 1fr;
   grid-column-gap: 20px;
   margin-bottom: 35px;
   text-align: left;
 }
 .feed-entry__img-wrap {
-  width: 100%;
+  border-radius: .2rem;
   height: auto;
   overflow: hidden;
+  width: 130px;
 }
 
 .feed-entry__img {
@@ -26,22 +27,20 @@ a:hover {
 
 h2 {
   font-family: helvetica, arial, sans-serif;
-  font-size: 21pt;
-  margin-top: 5px;
-  margin-bottom: 0;
+  font-size: 14pt;
+  margin-top: 0;
 }
 
 h4 {
   color: #999;
   font-size: 12pt;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 7px;
 }
 
 p {
   color: #6a6c6b;
-  font-size: 14pt;
-  list-style: 24pt;
+  font-size: 12pt;
+  line-height: 18pt;
 }
 
 .feed-entry__action-bar__save {
