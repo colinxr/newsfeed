@@ -38,6 +38,7 @@ routes.get('/api', (req, res) => {
 
 routes.get('/api/entries', (req, res) => {
   Entry.find()
+    .sort({ date: -1 })
     .then(data => {
       res.send(data);
     }).catch(err =>{

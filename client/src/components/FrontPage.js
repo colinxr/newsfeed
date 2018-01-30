@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 
-import EntryWrapper from './EntryWrapper';
+import Post from './Post';
 
 class FrontPage extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      stories: []
+      posts: []
     }
 
     this.callApi = this.callApi.bind(this);
@@ -18,7 +18,7 @@ class FrontPage extends React.Component {
     this.callApi()
       .then(resp => {
         console.log(resp);
-        this.setState({ stories: resp });
+        this.setState({ posts: resp });
       }).catch(err => {
         console.log(err);
       });
@@ -32,11 +32,21 @@ class FrontPage extends React.Component {
   };
 
   render() {
+    const posts = {...this.state.posts};
+
     return (
       <div>
         <h2>This is A1</h2>
         <h4>Because you shouldn't get your news from Facebook</h4>
-        <EntryWrapper entries={this.state.stories}/>
+        <div className="wrapper wrapper--front-page">
+          {
+            Object
+            .keys(posts)
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .map(key => <Post key={key} index={key}
+              postInfo={this.state.posts[key]} />)
+          }
+        </div>
       </div>
 
     )

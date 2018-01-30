@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import Entry from './Entry';
+import FeedEntry from './FeedEntry';
 
 import './EntryWrapper.css';
 
 class EntryWrapper extends Component {
   render() {
 
-    if (!this.props.entries.length) {
+    const props = this.props.entries.length ? this.props.entries : this.props.posts;
+
+    if (!props) {
       return null;
     }
 
@@ -14,9 +16,9 @@ class EntryWrapper extends Component {
       <div className="wrapper">
         {
           Object
-          .keys(this.props.entries)
-          .map(key => <Entry key={key} index={key}
-            entryInfo={this.props.entries[key]} />)
+          .keys(props)
+          .map(key => <FeedEntry key={key} index={key}
+            entryInfo={props[key]} />)
         }
       </div>
     );
