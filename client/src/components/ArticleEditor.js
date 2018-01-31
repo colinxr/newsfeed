@@ -12,14 +12,7 @@ class ArticleEditor extends Component {
 
     this.state = {
       editing: false,
-      post: {
-        date: this.props.articleToEdit.date,
-        originalTitle: this.props.articleToEdit.title,
-        title: this.props.articleToEdit.title,
-        source: this.props.articleToEdit.source,
-        url: this.props.articleToEdit.url,
-        urlToImage: this.props.articleToEdit.urlToImage
-      }
+      post: this.props.articleToEdit
     }
 
     this.handleTitle = this.handleTitle.bind(this);
