@@ -1,0 +1,50 @@
+.editor { position: sticky; }
+
+.editor__button {
+  color: #999;
+  cursor: pointer;
+  font-size: 10pt;
+  margin-top: 15px;
+  weight: 300;
+}
+
+.editor__button:hover {
+  color: #6a6c6b;
+}
+
+.article {
+  color: #6a6c6b;
+}
+
+.article__img {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+form { width: 100%; }
+
+input,
+textarea {
+  border-color: #999;
+  margin-bottom: 10px;
+  padding: 6px 0 6px 0;
+  /*resize: none;*/
+  width: 100%;
+}
+
+#article-title {
+  color: #4a4a4a;
+  font-size: 18pt;
+  font-weight: 600;
+  line-height: 24pt;
+}
+
+#article-source {
+  color: #4a4a4a;
+  font-size: 12pt;
+  font-weight: 600;
+}
+#article-description {
+  font-size: 12pt;
+  line-height: 18pt;
+}

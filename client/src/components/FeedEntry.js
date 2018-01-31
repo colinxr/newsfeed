@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import Thumbnail from './Thumbnail';
 import './FeedEntry.css';
 
 class FeedEntry extends Component {
@@ -22,20 +23,21 @@ class FeedEntry extends Component {
       title: article.title,
       source: article.source.name,
       url: article.url,
-      urltoImage: article.urlToImage,
+      urlToImage: article.urlToImage,
     }
-    console.log(articleObj);
 
-    this.apiPost(articleObj)
-      .then(res => {
-        console.log(res);
-      }).catch(err => {
-        console.log(err);
-      });
+    this.props.sendToEditor(articleObj);
+
+    // this.apiPost(articleObj)
+    //   .then(res => {
+    //     console.log(res);
+    //   }).catch(err => {
+    //     console.log(err);
+    //   });
   }
 
   apiPost = async (obj) => {
-    const response = await axios.post('/api/entries', obj);
+    const response = await axios.post('/api/posts', obj);
     console.log(response);
     const body = await response.data;
 
@@ -49,9 +51,13 @@ class FeedEntry extends Component {
 
     return (
       <div className="feed-entry">
-        <div className="feed-entry__img-wrap">
+        <Thumbnail
+          classname="feed-entry" location="ArticleList"
+          url={article.urlToImage}
+        />
+      {/*  <div className="feed-entry__img-wrap">
           <a href={article.url} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>
-        </div>
+        </div>*/}
         <div className="feed-entry__body">
           <header>
             <h2 className="feed-entry__title article-title"><a href={article.url} className="feed-entry__title-link">{article.title}</a></h2>

@@ -25,7 +25,7 @@ class FrontPage extends React.Component {
   }
 
   callApi = async () => {
-    const response = await axios('/api/entries');
+    const response = await axios('/api/posts');
     const body = await response.data;
     if (response.status !== 200) throw Error(body.message);
     return body;

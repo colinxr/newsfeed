@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import FeedEntry from './FeedEntry';
 import './Admin.css';
+import ArticleList from './ArticleList';
+import ArticleEditor from './ArticleEditor';
 
 class Admin extends Component {
   constructor() {
@@ -11,10 +12,12 @@ class Admin extends Component {
     this.state = {
       posts: [],
       articles: [],
+      articleToEdit: []
     }
 
     this.getPosts = this.getPosts.bind(this);
     this.getArticles = this.getArticles.bind(this);
+    this.sendToEditor = this.sendToEditor.bind(this);
   }
 
   componentDidMount() {
@@ -27,9 +30,16 @@ class Admin extends Component {
       })
   }
 
-  getPosts = () => { return axios.get('api/entries'); }
+  getPosts = () => { return axios.get('api/posts'); }
+  getArticles = () => { return axios.get('/api/feed'); }
 
-  getArticles = () => { return axios.get('/api'); }
+  sendToEditor = (obj) => {
+    console.log(obj);
+    console.log('sending to Editor');
+    this.setState({
+      articleToEdit: obj
+    });
+  }
 
   render() {
     return (
@@ -37,15 +47,13 @@ class Admin extends Component {
         <header className="Admin-header">
           <h1 className="Admin-title">A1: NewsFeed</h1>
         </header>
-        <div className="wrapper">
-          <div className="feed-entries">
-            {
-              Object
-              .keys(this.state.articles)
-              .map(key => <FeedEntry key={key} index={key}
-                articleInfo={this.state.articles[key]} />)
-            }
-          </div>
+        <div className="admin__container">
+          <ArticleList articles={this.state.articles}
+          sendToEditor={this.sendToEditor}/>
+          <ArticleEditor
+            articleToEdit={this.state.articleToEdit}
+            text={`this is some placeholder text`}
+            />
         </div>
       </div>
     );
