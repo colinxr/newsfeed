@@ -34,8 +34,6 @@ class Admin extends Component {
   getArticles = () => { return axios.get('/api/feed'); }
 
   sendToEditor = (obj) => {
-    console.log(obj);
-    console.log('sending to Editor');
     this.setState({
       articleToEdit: obj
     });
