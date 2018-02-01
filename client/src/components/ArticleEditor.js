@@ -143,12 +143,12 @@ class ArticleEditor extends Component {
   render() {
     const post = this.state.post;
 
-    if (post === null && this.state.message !== null) {
-      return this.renderMessage();
+    if (post === null && this.state.message === null) {
+      return null
     }
 
-    if (post === null && this.state.message === null) {
-      return null;
+    if (post === null && this.state.message !== null) {
+      return this.renderMessage();
     }
 
     return (
