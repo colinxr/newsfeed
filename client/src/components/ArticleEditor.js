@@ -12,7 +12,7 @@ class ArticleEditor extends Component {
 
     this.state = {
       editing: false,
-      post: this.props.articleToEdit
+      post: null
     }
 
     this.handleTitle = this.handleTitle.bind(this);
@@ -20,7 +20,14 @@ class ArticleEditor extends Component {
     this.handleSave = this.handleSave.bind(this);
     this.handlePublish = this.handlePublish.bind(this);
     this.renderForm = this.renderForm.bind(this);
+    this.renderButton = this.renderButton.bind(this);
     this.apiPost = this.apiPost.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.post !== nextProps.articleToEdit) {
+      this.setState({post: nextProps.articleToEdit});
+    }
   }
 
   handleTitle = (e) => {
@@ -60,7 +67,9 @@ class ArticleEditor extends Component {
     //   postToSave: articleObj
     // });
 
-    console.log(this.state.postToSave);
+    console.log('publishing');
+    this.apiPost(this.state.post);
+    //this.setState({post: null});
   }
 
   apiPost = async (obj) => {
@@ -82,7 +91,7 @@ class ArticleEditor extends Component {
           <h4 id="article-source">{post.source}</h4>
           <p id="article-description">{post.description}</p>
         </div>
-        <button className="editor__button" onClick={(e) => {this.handleEdit(e)}} type="submit">Edit Post</button>
+        {this.renderButton()}
       </div>
 
     )
@@ -91,20 +100,35 @@ class ArticleEditor extends Component {
   renderForm() {
     const post = this.state.post;
     return (
-      <div><form className="editor__form" onSubmit={(e) => this.submitForm(e)}>
-        <textarea id="article-title" type="text" name="article-title" defaultValue={post.originalTitle} onChange={(e) => this.handleTitle(e)} required autoComplete="off" ref={(title) => {this.formTitle = title}}></textarea>
-        <input id="article-source" type="text" name="article-source" defaultValue={post.source} required autoComplete="off" ref={(source) => {this.formSource = source}}  />
-        <textarea id="article-description" type="text" name="article-description" defaultValue={post.description} required autoComplete="off" ref={(desc) => {this.formDesc = desc}}></textarea>
-      </form>
-      <button className="editor__button" onClick={(e) => {this.handleSave(e)}} type="submit">Save Post</button></div>
+      <div>
+        <form className="editor__form" onSubmit={(e) => this.submitForm(e)}>
+          <textarea id="article-title" type="text" name="article-title" defaultValue={post.originalTitle} onChange={(e) => this.handleTitle(e)} required autoComplete="off" ref={(title) => {this.formTitle = title}}></textarea>
+          <input id="article-source" type="text" name="article-source" defaultValue={post.source} required autoComplete="off" ref={(source) => {this.formSource = source}}  />
+          <textarea id="article-description" type="text" name="article-description" defaultValue={post.description} required autoComplete="off" ref={(desc) => {this.formDesc = desc}}></textarea>
+        </form>
+        {this.renderButton()}
+      </div>
 
     )
   }
 
-  render() {
-    const article = this.props.articleToEdit;
+  renderButton() {
+    if (!this.state.editing) {
+      return (
+        <button className="editor__button" onClick={(e) => {this.handleEdit(e)}} type="submit">Edit Post</button>
+      )
+    } else {
+      return (
+        <button className="editor__button" onClick={(e) => {this.handleSave(e)}} type="submit">Save Post</button>
+      )
+    }
+  }
 
-    if(!Object.keys(article).length) {
+  render() {
+    const post = this.state.post;
+    console.log(post);
+
+    if (this.state.post === null) {
       return null;
     }
 
@@ -114,7 +138,7 @@ class ArticleEditor extends Component {
           <Thumbnail
             class="article"
             location="editor"
-            url={article.urlToImage}
+            url={post.urlToImage}
           />
         { !this.state.editing ? this.renderStatic() : this.renderForm() }
         </div>

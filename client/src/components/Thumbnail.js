@@ -16,7 +16,7 @@ class Thumbnail extends Component {
 
     return(
       <div className={classname + '__img-wrap img-wrap'}>
-        <a href={url} className={classname +  'title-link'}><img src={url} alt="" /></a>
+        <a href={url} className={classname +  'title-link'} target="_blank"><img src={url} alt="" /></a>
       </div>
     );
   }
