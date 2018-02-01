@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const expressValidator = require('express-validator');
+const flash = require('express-flash');
 
 require('dotenv').config({ path: 'config.env' });
 
@@ -19,6 +20,7 @@ const router = express.Router();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(flash());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

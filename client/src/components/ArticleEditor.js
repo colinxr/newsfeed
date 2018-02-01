@@ -12,7 +12,8 @@ class ArticleEditor extends Component {
 
     this.state = {
       editing: false,
-      post: null
+      post: null,
+      message: null,
     }
 
     this.handleTitle = this.handleTitle.bind(this);
@@ -21,12 +22,16 @@ class ArticleEditor extends Component {
     this.handlePublish = this.handlePublish.bind(this);
     this.renderForm = this.renderForm.bind(this);
     this.renderButton = this.renderButton.bind(this);
+    this.renderMessage = this.renderMessage.bind(this);
     this.apiPost = this.apiPost.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.post !== nextProps.articleToEdit) {
-      this.setState({post: nextProps.articleToEdit});
+      this.setState({
+        post: nextProps.articleToEdit,
+        message: null
+      });
     }
   }
 
@@ -69,7 +74,7 @@ class ArticleEditor extends Component {
 
     console.log('publishing');
     this.apiPost(this.state.post);
-    //this.setState({post: null});
+
   }
 
   apiPost = async (obj) => {
@@ -78,6 +83,10 @@ class ArticleEditor extends Component {
     const body = await response.data;
 
     if (response.status !== 200) throw Error(body.message);
+    this.setState({
+      post: null,
+      message: response.data.message
+    });
 
     return body;
   }
@@ -108,7 +117,6 @@ class ArticleEditor extends Component {
         </form>
         {this.renderButton()}
       </div>
-
     )
   }
 
@@ -124,11 +132,22 @@ class ArticleEditor extends Component {
     }
   }
 
+  renderMessage() {
+    return (
+      <div>
+        <h2>{this.state.message}</h2>
+      </div>
+    )
+  }
+
   render() {
     const post = this.state.post;
-    console.log(post);
 
-    if (this.state.post === null) {
+    if (post === null && this.state.message !== null) {
+      return this.renderMessage();
+    }
+
+    if (post === null && this.state.message === null) {
       return null;
     }
 
