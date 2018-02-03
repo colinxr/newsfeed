@@ -29,7 +29,7 @@ class FrontPage extends React.Component {
     const body = await response.data;
     if (response.status !== 200) throw Error(body.message);
     return body;
-  };
+  }
 
   render() {
     const posts = {...this.state.posts};
@@ -44,7 +44,7 @@ class FrontPage extends React.Component {
             .keys(posts)
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .map(key => <Post key={key} index={key}
-              postInfo={this.state.posts[key]} />)
+              postInfo={this.state.posts[key]} removePost={this.removePost}/>)
           }
         </div>
       </div>
