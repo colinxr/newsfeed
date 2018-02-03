@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Post.css';
+import Thumbnail from './Thumbnail';
 
 class Post extends Component {
   constructor() {
@@ -11,13 +12,17 @@ class Post extends Component {
 
   handleDelete = (e) => {
     e.preventDefault();
+    console.log(e);
     console.log('deleting');
     console.log(this.props.postInfo._id);
-    this.apiDelete(this.props.postInfo._id);
-    this.props.removePost(this.props.postInfo._id);
+    this.apiDelete(this.props.postInfo._id)
+      .then(e => {
+        console.log(e);
+        //this.props.removePost(e)
+      });
   }
 
-  apiDelete = async(postID) => {
+  apiDelete = async(postID, e) => {
     const response = await axios.delete(`/api/posts/${postID}`);
     console.log(response);
     const body = await response.data;
@@ -35,11 +40,14 @@ class Post extends Component {
     return (
       <div className="post-entry">
         <header>
-          <div className="post-entry__img-wrap">
-            <a href={post.url} className="post-entry__title-link"><img src={post.urlToImage} alt="" className="post-entry__img" /></a>
-          </div>
+          <Thumbnail
+            classname="post"
+            location="frontPage"
+            postUrl={post.url}
+            url={post.urlToImage}
+          />
+          <h4>{post.source}</h4>
           <h2 className="post-entry__title post-title"><a href={post.url} className="post-entry__title-link">{post.title}</a></h2>
-          <h4>{post.source.name}</h4>
         </header>
         <div className="post-entry__description">
           <p>{post.description}</p>

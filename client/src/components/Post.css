@@ -42,13 +42,13 @@ p {
   list-style: 24pt;
 }
 
-.feed-entry__action-bar__save {
+.post-entry__action-bar__delete {
   color: #999;
   cursor: pointer;
   font-size: 10pt;
   weight: 300;
 }
 
-.feed-entry__action-bar__save:hover {
+.post-entry__action-bar__delete:hover {
   color: #6a6c6b;
 }

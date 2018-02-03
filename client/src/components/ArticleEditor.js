@@ -53,12 +53,14 @@ class ArticleEditor extends Component {
   handleSave = (e) => {
     e.preventDefault();
 
+    const post = {...this.state.post};
+
+    post.title = this.formTitle.value;
+    post.source = this.formSource.value;
+    post.description = this.formDesc.value;
+
     this.setState({
-      post: {
-        title: this.formTitle.value,
-        source: this.formSource.value,
-        description: this.formDesc.value
-      },
+      post: post,
       editing: false,
     });
   }
@@ -143,11 +145,13 @@ class ArticleEditor extends Component {
   render() {
     const post = this.state.post;
 
-    if (post === null && this.state.message === null) {
-      return null
+    console.log(post);
+
+    if (this.state.post === null && this.state.message === null) {
+      return null;
     }
 
-    if (post === null && this.state.message !== null) {
+    if (this.state.post === null && this.state.message !== null) {
       return this.renderMessage();
     }
 
@@ -155,7 +159,7 @@ class ArticleEditor extends Component {
       <div className="editor">
         <div className="article">
           <Thumbnail
-            class="article"
+            classname="article"
             location="editor"
             url={post.urlToImage}
           />

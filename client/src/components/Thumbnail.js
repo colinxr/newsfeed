@@ -4,7 +4,7 @@ import './Thumbnail.css';
 
 class Thumbnail extends Component {
   render() {
-    const { location, url, classname } = this.props;
+    const { location, url, classname, postUrl } = this.props;
 
     if (location === 'editor'){
       return(
@@ -16,7 +16,7 @@ class Thumbnail extends Component {
 
     return(
       <div className={classname + '__img-wrap img-wrap'}>
-        <a href={url} className={classname +  'title-link'} target="_blank"><img src={url} alt="" /></a>
+        <a href={postUrl} className={classname +  'title-link'} target="_blank"><img src={url} alt="" /></a>
       </div>
     );
   }
