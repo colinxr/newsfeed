@@ -78,7 +78,7 @@ routes.post('/api/posts', (req, res) => {
     .then(entry => {
       res.send({
         success: true,
-        message: 'Post successfully added'
+        message: 'Post Added Successfully'
       });
     })
     .catch(err => {

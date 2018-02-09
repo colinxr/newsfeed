@@ -13,13 +13,14 @@ class ArticleEditor extends Component {
     this.state = {
       editing: false,
       post: null,
-      message: null,
+      message: null
     }
 
     this.handleTitle = this.handleTitle.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handlePublish = this.handlePublish.bind(this);
+    this.renderStatic = this.renderStatic.bind(this);
     this.renderForm = this.renderForm.bind(this);
     this.renderButton = this.renderButton.bind(this);
     this.renderMessage = this.renderMessage.bind(this);
@@ -27,7 +28,7 @@ class ArticleEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.post !== nextProps.articleToEdit) {
+    if (this.state.post !== nextProps.articleToEdit) {
       this.setState({
         post: nextProps.articleToEdit,
         message: null
@@ -40,7 +41,6 @@ class ArticleEditor extends Component {
     this.setState({
       post: { title: e.target.value }
     });
-    console.log(this.state.post);
   }
 
   handleEdit = (e) => {
@@ -52,7 +52,6 @@ class ArticleEditor extends Component {
 
   handleSave = (e) => {
     e.preventDefault();
-
     this.setState({
       post: {
         title: this.formTitle.value,
@@ -65,16 +64,10 @@ class ArticleEditor extends Component {
 
   handlePublish = (e) => {
     e.preventDefault();
-
     if (this.state.editing === true) this.setState({ editing : false });
-
-    // this.setState({
-    //   postToSave: articleObj
-    // });
 
     console.log('publishing');
     this.apiPost(this.state.post);
-
   }
 
   apiPost = async (obj) => {
@@ -102,7 +95,6 @@ class ArticleEditor extends Component {
         </div>
         {this.renderButton()}
       </div>
-
     )
   }
 
@@ -141,29 +133,29 @@ class ArticleEditor extends Component {
   }
 
   render() {
-    const post = this.state.post;
+    const { post, message, editing } = {...this.state};
 
-    if (post === null && this.state.message === null) {
-      return null
-    }
+    if (post === null && message === null) return null;
 
-    if (post === null && this.state.message !== null) {
-      return this.renderMessage();
-    }
+    if (post === null && message !== null) return this.renderMessage();
 
-    return (
-      <div className="editor">
-        <div className="article">
-          <Thumbnail
-            class="article"
-            location="editor"
-            url={post.urlToImage}
-          />
-        { !this.state.editing ? this.renderStatic() : this.renderForm() }
+    if (Object.keys(post).length) {
+      return (
+        <div className="editor">
+          <div className="article">
+            <Thumbnail
+              class="article"
+              location="editor"
+              url={post.urlToImage}
+            />
+            {!editing ? this.renderStatic() : this.renderForm()}
+          </div>
+          <button className="editor__button" onClick={(e) => {this.handlePublish(e)}} type="submit">Publish Post</button>
         </div>
-        <button className="editor__button" onClick={(e) => {this.handlePublish(e)}} type="submit">Publish Post</button>
-      </div>
-    );
+      );
+    }
+
+    return null;
   }
 }
 
