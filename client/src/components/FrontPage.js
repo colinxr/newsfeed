@@ -17,11 +17,8 @@ class FrontPage extends React.Component {
 
   componentDidMount() {
     this.callApi()
-      .then(resp => {
-        this.setState({ posts: resp });
-      }).catch(err => {
-        console.log(err);
-      });
+      .then(resp => this.setState({ posts: resp }))
+      .catch(err => console.log(err));
   }
 
   callApi = async () => {
@@ -33,22 +30,13 @@ class FrontPage extends React.Component {
 
   removePost(postID) {
     const posts = {...this.state.posts};
+    // creates new object without the post that was just deleted
     const filteredPosts = Object.keys(posts)
       .filter(key => {
-        console.log(postID);
-        if (posts[key]._id !== postID) {
-          console.log(posts[key]._id);
-          return posts[key];
-        }
+        if (posts[key]._id !== postID) return posts[key];
       })
-      .map(key => {
-        console.log(key);
-        return posts[key];
-      });
+      .map(key => posts[key]);
 
-
-    console.log(filteredPosts);
-    console.log('removing post from front page test');
     this.setState({ posts: filteredPosts });
   }
 

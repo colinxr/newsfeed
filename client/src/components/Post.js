@@ -16,15 +16,11 @@ class Post extends Component {
     console.log(this.props.postInfo._id);
     const postID = this.props.postInfo._id;
     this.apiDelete(this.props.postInfo._id)
-      .then(e => {
-        console.log(e);
-        this.props.removePost(postID)
-      });
+      .then(e => this.props.removePost(postID));
   }
 
   apiDelete = async(postID, e) => {
     const response = await axios.delete(`/api/posts/${postID}`);
-    console.log(response);
     const body = await response.data;
 
     if (response.status !== 200) throw Error(body.message);

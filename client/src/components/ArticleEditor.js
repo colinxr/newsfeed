@@ -69,13 +69,11 @@ class ArticleEditor extends Component {
     e.preventDefault();
     if (this.state.editing === true) this.setState({ editing : false });
 
-    console.log('publishing');
     this.apiPost(this.state.post);
   }
 
   apiPost = async (obj) => {
     const response = await axios.post('/api/posts', obj);
-    console.log(response);
     const body = await response.data;
 
     if (response.status !== 200) throw Error(body.message);
