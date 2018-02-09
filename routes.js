@@ -84,6 +84,12 @@ routes.post('/api/posts', (req, res) => {
     .catch(err => {
       res.send(err);
     });
-  });
+});
+
+routes.delete('/api/posts/:id', (req, res) => {
+  Entry.remove({ _id: req.params.id})
+    .then(entry => res.send({ message: 'Deleted the post' }))
+    .catch(err => res.send({ message: 'error' }));
+});
 
 module.exports = routes;

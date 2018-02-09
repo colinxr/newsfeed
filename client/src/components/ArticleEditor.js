@@ -52,12 +52,15 @@ class ArticleEditor extends Component {
 
   handleSave = (e) => {
     e.preventDefault();
+
+    const post = {...this.state.post};
+
+    post.title = this.formTitle.value;
+    post.source = this.formSource.value;
+    post.description = this.formDesc.value;
+
     this.setState({
-      post: {
-        title: this.formTitle.value,
-        source: this.formSource.value,
-        description: this.formDesc.value
-      },
+      post: post,
       editing: false,
     });
   }
