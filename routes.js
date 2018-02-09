@@ -72,6 +72,8 @@ routes.get('/api/posts', (req, res) => {
 });
 
 routes.post('/api/posts', (req, res) => {
+  // NLP stuff to determine topic and theme
+
   const newEntry = new Entry(req.body);
 
   newEntry.save()

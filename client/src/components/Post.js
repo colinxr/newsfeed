@@ -12,13 +12,13 @@ class Post extends Component {
 
   handleDelete = (e) => {
     e.preventDefault();
-    console.log(e);
     console.log('deleting');
     console.log(this.props.postInfo._id);
+    const postID = this.props.postInfo._id;
     this.apiDelete(this.props.postInfo._id)
       .then(e => {
         console.log(e);
-        //this.props.removePost(e)
+        this.props.removePost(postID)
       });
   }
 

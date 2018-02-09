@@ -31,11 +31,25 @@ class FrontPage extends React.Component {
     return body;
   }
 
-  removePost(e) {
-    let filteredPosts = this.state.posts.filter(item => item !== e.target.value);
+  removePost(postID) {
+    const posts = {...this.state.posts};
+    const filteredPosts = Object.keys(posts)
+      .filter(key => {
+        console.log(postID);
+        if (posts[key]._id !== postID) {
+          console.log(posts[key]._id);
+          return posts[key];
+        }
+      })
+      .map(key => {
+        console.log(key);
+        return posts[key];
+      });
+
+
+    console.log(filteredPosts);
     console.log('removing post from front page test');
     this.setState({ posts: filteredPosts });
-
   }
 
   render() {
@@ -55,8 +69,7 @@ class FrontPage extends React.Component {
           }
         </div>
       </div>
-
-    )
+    );
   }
 }
 
