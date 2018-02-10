@@ -54,7 +54,6 @@ class FeedEntry extends Component {
       <div className="feed-entry">
         <Thumbnail
           classname="feed-entry" location="ArticleList"
-          
         />
        {/* <div className="feed-entry__img-wrap">
           <a href={article['rss:link']['#']} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>
