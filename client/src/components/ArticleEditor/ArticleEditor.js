@@ -4,7 +4,7 @@ import axios from 'axios';
 import './formReset.css';
 import './ArticleEditor.css';
 
-import Thumbnail from './Thumbnail';
+import Thumbnail from '../Thumbnail/Thumbnail';
 
 class ArticleEditor extends Component {
   constructor(props) {

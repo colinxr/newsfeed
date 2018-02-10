@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Post.css';
-import Thumbnail from './Thumbnail';
+import Thumbnail from '../Thumbnail/Thumbnail';
 
 class Post extends Component {
   constructor() {

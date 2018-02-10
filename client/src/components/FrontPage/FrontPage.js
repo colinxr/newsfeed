@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import Post from './Post';
+import Post from '../Post/Post';
 
 class FrontPage extends React.Component {
   constructor() {

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
-import FeedEntry from './FeedEntry';
+import './ArticleList.css';
+
+import FeedEntry from '../FeedEntry/FeedEntry';
 
 class ArticleList extends Component {
 

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Admin.css';
-import ArticleList from './ArticleList';
-import ArticleEditor from './ArticleEditor';
+import ArticleList from '../ArticleList/ArticleList';
+import ArticleEditor from '../ArticleEditor/ArticleEditor';
 
 class Admin extends Component {
   constructor() {
