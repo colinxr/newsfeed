@@ -1,0 +1,10 @@
+.wrapper--front-page {
+  width: 1024px;
+}
+
+.wrapper--front-page__posts{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 25px;
+  grid-row-gap: 55px;
+}

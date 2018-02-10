@@ -6,14 +6,5 @@ body {
 
 .wrapper {
   margin: 86px auto;
-  max-width: 840px;
   text-align: left;
-}
-
-.wrapper--front-page {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-column-gap: 25px;
-  grid-row-gap: 55px;
-  width: 960px;
 }

@@ -1,0 +1,19 @@
+.featured-post {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-column-gap: 25px;
+  margin-bottom: 50px;
+}
+
+.featured-post__img {
+  grid-column-span: 2;
+  background-color: grey;
+}
+
+.featured-post__content {
+  grid-column: 3;
+}
+
+.featured-post h2 {
+  font-size: 20pt;
+}

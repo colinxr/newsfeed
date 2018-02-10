@@ -31,7 +31,7 @@ class Admin extends Component {
   }
 
   getPosts = () => { return axios.get('api/posts'); }
-  getArticles = () => { return axios.get('/api/feed'); }
+  getArticles = () => { return axios.get('/api/feeds'); }
 
   sendToEditor = (obj) => {
     this.setState({

@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 
+import './FrontPage.css';
+
+import FeaturedPost from '../FeaturedPost/FeaturedPost';
 import Post from '../Post/Post';
 
 class FrontPage extends React.Component {
@@ -8,7 +11,8 @@ class FrontPage extends React.Component {
     super();
 
     this.state = {
-      posts: []
+      posts: [],
+      featured: [],
     }
 
     this.callApi = this.callApi.bind(this);
@@ -17,7 +21,13 @@ class FrontPage extends React.Component {
 
   componentDidMount() {
     this.callApi()
-      .then(resp => this.setState({ posts: resp }))
+      .then(resp => {
+        const featured = resp.shift();
+        this.setState({
+          posts: resp,
+          featured: featured
+        });
+      })
       .catch(err => console.log(err));
   }
 
@@ -48,13 +58,16 @@ class FrontPage extends React.Component {
         <h2><a href="/admin">This is A1</a></h2>
         <h4>Because you shouldn't get your news from Facebook</h4>
         <div className="wrapper wrapper--front-page">
-          {
-            Object
-            .keys(posts)
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            .map(key => <Post key={key} index={key}
-              postInfo={this.state.posts[key]} removePost={this.removePost}/>)
-          }
+          <FeaturedPost featuredPost={this.state.featured} />
+          <div className="wrapper--front-page__posts">
+            {
+              Object
+              .keys(posts)
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              .map(key => <Post key={key} index={key}
+                postInfo={this.state.posts[key]} removePost={this.removePost}/>)
+            }
+          </div>
         </div>
       </div>
     );
