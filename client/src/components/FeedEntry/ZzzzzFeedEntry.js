@@ -51,24 +51,26 @@ class FeedEntry extends Component {
     const article = this.props.articleInfo;
 
     return (
-      <div className="feed-entry">
-        {/* <Thumbnail
+      null
+      /*<div className="feed-entry">
+        <Thumbnail
           classname="feed-entry" location="ArticleList"
           url={article.media:content.1.}
         />
-       <div className="feed-entry__img-wrap">
+      {/*  <div className="feed-entry__img-wrap">
           <a href={article.url} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>
-        </div>*/}
+        </div>}
         <div className="feed-entry__body">
           <header>
-            <h2 className="feed-entry__title article-title"><a href={article['rss:link']['#']} className="feed-entry__title-link" target="_blank">{article['rss:title']['#']}</a></h2>
+            <h2 className="feed-entry__title article-title"><a href={article.url} className="feed-entry__title-link" target="_blank">{article.title}</a></h2>
+            <h4>{article.source.name}</h4>
           </header>
         <div className="feed-entry__description">
-          <p></p>
+          <p>{article.description}</p>
         </div>
         <div className="feed-entry__action-bar"><span className="feed-entry__action-bar__save" onClick={(e) => this.handleClick(e)}>Save</span></div>
         </div>
-      </div>
+      </div>*/
     );
   }
 }

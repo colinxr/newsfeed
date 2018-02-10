@@ -25,7 +25,7 @@ class Admin extends Component {
       .then(([posts, articles]) => {
         this.setState({
           posts: posts.data,
-          articles: articles.data.articles
+          articles: articles.data
         });
       })
   }

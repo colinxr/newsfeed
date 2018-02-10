@@ -1,31 +1,48 @@
 const NewsAPI = require('newsapi');
-const feedparser = require('feedparser-promised');
 const newsApi = new NewsAPI(process.env.API_KEY)
+
+const feedParser = require('feedparser-promised');
+const Bluebird   = require('bluebird');
 
 const Entry = require('./models/Entry');
 const routes = require('express').Router();
 
 const controller = require('./feedController');
 
-exports.init = (req, res) => {
+init = (req, res) => {
   res.json({ express: 'Hello from express' });
 }
 
-exports.adminFeedParser = (req, res) => {
-  const articles = [];
-  const feeds = [
-  	'http://www.guardian.co.uk/world/usa/rss',
-  	'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
-  	'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
-  	'http://feeds.feedburner.com/blogto/',
-  	'http://rss.cbc.ca/lineup/world.xml',
-  	'http://feeds.reuters.com/Reuters/worldNews',
-  	'http://feeds.bbci.co.uk/news/world/rss.xml',
-  	'http://feeds.bbci.co.uk/news/business/rss.xml',
-  	'http://feeds.bbci.co.uk/news/technology/rss.xml'
-  	]
+adminFeedParser = async (req, res) => {
+  const feeds = {
+  	'the-guardian-us':  'http://www.guardian.co.uk/world/usa/rss',
+  	'toronto-star-can':    'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
+  	'toronto-star-ont': 'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
+  	'blog-to':         'http://feeds.feedburner.com/blogto/',
+  	'cbc-news-world':  'http://rss.cbc.ca/lineup/world.xml',
+  	'reuters-world':   'http://feeds.reuters.com/Reuters/worldNews',
+  	'bbc-world':       'http://feeds.bbci.co.uk/news/world/rss.xml',
+  	'bbc-business':    'http://feeds.bbci.co.uk/news/business/rss.xml',
+  	'bbc-tech':        'http://feeds.bbci.co.uk/news/technology/rss.xml'
+  }
 
-  feeds.forEach(feed => {
+  const feedUrls = Object
+      .keys(feeds)
+      .map(key => feeds[key]);
+
+  const promises = feedUrls.map(feed => parseFeed(feed));
+
+  Bluebird.all(promises)
+    .then(resp => {
+      stories = [].concat(...resp);
+      console.log(stories[0]);
+      res.send(stories);
+    });
+}
+
+parseFeed = (feed) => {
+    let articles = [];
+
     const httpConfig = {
       uri: feed,
       gzip: true,
@@ -36,14 +53,18 @@ exports.adminFeedParser = (req, res) => {
       normalize: false,
     }
 
-    feedparser.parse(httpConfig, fpConfig)
+    return feedParser.parse(httpConfig, fpConfig)
       .then(items => {
         articles = items.map(item => item);
+        //console.log(articles.length);
+        return articles;
       })
-      .catch(err => console.log(err));
-  });
+      .catch(err => console.log('Error: ' + err));
+
+
 }
-exports.adminFeedNewsApi = (req, res) => {
+
+adminFeedNewsApi = (req, res) => {
   const ts = new Date();
   const isoDate = ts.toISOString();
   const date = isoDate.substr(0, 9);
@@ -62,7 +83,7 @@ exports.adminFeedNewsApi = (req, res) => {
   });
 }
 
-exports.getPosts = (req, res) => {
+getPosts = (req, res) => {
   Entry.find()
     .sort({ date: -1 })
     .then(data => {
@@ -72,7 +93,7 @@ exports.getPosts = (req, res) => {
     });
 }
 
-exports.savePost = (req, res) => {
+savePost = (req, res) => {
   // NLP stuff to determine topic and theme
   const newEntry = new Entry(req.body);
   newEntry.save()
@@ -87,8 +108,18 @@ exports.savePost = (req, res) => {
     });
 }
 
-exports.deletePost = (req, res) => {
+deletePost = (req, res) => {
   Entry.remove({ _id: req.params.id})
     .then(entry => res.send({ message: 'Post has been deleted.' }))
     .catch(err => res.send({ message: 'error' }));
+}
+
+module.exports = {
+  init,
+  adminFeedParser,
+  adminFeedNewsApi,
+  getPosts,
+  savePost,
+  deletePost,
+  parseFeed
 }
