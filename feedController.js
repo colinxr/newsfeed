@@ -36,6 +36,7 @@ adminFeedParser = async (req, res) => {
     .then(resp => {
       stories = [].concat(...resp);
       console.log(stories[0]);
+      console.log(stories[0].enclosures[1].url);
       res.send(stories);
     });
 }
@@ -49,8 +50,7 @@ parseFeed = (feed) => {
     }
 
     const fpConfig = {
-      addmeta: false,
-      normalize: false,
+      addmeta: false
     }
 
     return feedParser.parse(httpConfig, fpConfig)
