@@ -49,12 +49,24 @@ class FeedEntry extends Component {
 
   render() {
     const article = this.props.articleInfo;
+    const stripTags = article.description.replace(/(<([^>]+)>)/ig,"");
+
+    const desc = stripTags.slice(0,250) + '...';
+
+    console.log(article.enclosures[0].url);
 
     return (
       <div className="feed-entry">
-        <Thumbnail
-          classname="feed-entry" location="ArticleList"
-        />
+        {
+          if (article.enclosures.length) {
+            <Thumbnail
+              classname="feed-entry"
+              location="ArticleList"
+              url={article.enclosures[0].url}
+            />
+        }
+      }
+
        {/* <div className="feed-entry__img-wrap">
           <a href={article['rss:link']['#']} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>
         </div>*/}
@@ -63,7 +75,7 @@ class FeedEntry extends Component {
             <h2 className="feed-entry__title article-title"><a href={article.link} className="feed-entry__title-link" target="_blank">{article.title}</a></h2>
           </header>
         <div className="feed-entry__description">
-          <p>{article.description}</p>
+          <p>{desc}</p>
         </div>
         <div className="feed-entry__action-bar"><span className="feed-entry__action-bar__save" onClick={(e) => this.handleClick(e)}>Save</span></div>
         </div>
