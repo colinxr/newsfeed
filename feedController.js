@@ -1,6 +1,6 @@
-const NewsAPI = require('newsapi');
-const newsApi = new NewsAPI(process.env.API_KEY)
-
+// const NewsAPI = require('newsapi');
+// const newsApi = new NewsAPI(process.env.API_KEY)
+const memCache = require('memory-cache');
 const feedParser = require('feedparser-promised');
 const Bluebird   = require('bluebird');
 
@@ -11,6 +11,24 @@ const controller = require('./feedController');
 
 init = (req, res) => {
   res.json({ express: 'Hello from express' });
+}
+
+cache = (duration) => {
+  return (req, res, next) => {
+    let key = '__express__'+req.originalUrl || req.url;
+    let cachedBody = memCache.get(key);
+
+    if (cachedBody) {
+      res.send(cachedBody);
+      return
+    } else {
+      res.sendResponse = res.send;
+      res.send = (body) => {
+        memCache.put(key, body, duration * 1000);
+        res.sendResponse(body);
+      }
+    }
+  }
 }
 
 adminFeedParser = async (req, res) => {
@@ -34,9 +52,9 @@ adminFeedParser = async (req, res) => {
 
   Bluebird.all(promises)
     .then(resp => {
-      stories = [].concat(...resp);
-      console.log(stories[0]);
-      console.log(stories[0].enclosures[1].url);
+      stories = []
+        .concat(...resp) // flattens resp into on array of objects
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron
       res.send(stories);
     });
 }
@@ -50,7 +68,7 @@ parseFeed = (feed) => {
     }
 
     const fpConfig = {
-      addmeta: false
+      addmeta: true
     }
 
     return feedParser.parse(httpConfig, fpConfig)
@@ -116,6 +134,7 @@ deletePost = (req, res) => {
 
 module.exports = {
   init,
+  cache,
   adminFeedParser,
   adminFeedNewsApi,
   getPosts,

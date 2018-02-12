@@ -41,7 +41,9 @@ class FrontPage extends React.Component {
   removePost(postID) {
     const posts = {...this.state.posts};
     // creates new object without the post that was just deleted
-    const filteredPosts = Object.keys(posts)
+    const filteredPosts = Object
+      .keys(posts)
+      .slice(0, 9)
       .filter(key => {
         if (posts[key]._id !== postID) return posts[key];
       })
@@ -51,7 +53,7 @@ class FrontPage extends React.Component {
   }
 
   render() {
-    const posts = {...this.state.posts};
+    const {posts, featured} = {...this.state};
 
     return (
       <div>

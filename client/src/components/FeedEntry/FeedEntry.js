@@ -17,12 +17,15 @@ class FeedEntry extends Component {
     e.preventDefault();
     const article = this.props.articleInfo;
 
+    const stripTags = article.description.replace(/(<([^>]+)>)/ig,"");
+    const desc = stripTags.slice(0,250) + '...';
+
     const articleObj = {
       date: article.pubDate,
-      description: article.description,
+      description: desc,
       originalTitle: article.title,
       title: article.title,
-      source: article.author,
+      source: article.meta.title,
       url: article.link,
       urlToImage: article.urlToImage,
     }
@@ -53,26 +56,21 @@ class FeedEntry extends Component {
 
     const desc = stripTags.slice(0,250) + '...';
 
-    console.log(article.enclosures[0].url);
+    //console.log(article.enclosures[0].url);
 
     return (
       <div className="feed-entry">
-        {
-          if (article.enclosures.length) {
-            <Thumbnail
-              classname="feed-entry"
-              location="ArticleList"
-              url={article.enclosures[0].url}
-            />
-        }
-      }
-
-       {/* <div className="feed-entry__img-wrap">
+        <Thumbnail
+          classname="feed-entry"
+          location="ArticleList"
+        />
+        {/*<div className="feed-entry__img-wrap">
           <a href={article['rss:link']['#']} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>
         </div>*/}
         <div className="feed-entry__body">
           <header>
             <h2 className="feed-entry__title article-title"><a href={article.link} className="feed-entry__title-link" target="_blank">{article.title}</a></h2>
+            <h4>{article.meta.title}</h4>
           </header>
         <div className="feed-entry__description">
           <p>{desc}</p>

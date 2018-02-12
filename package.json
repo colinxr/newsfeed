@@ -11,9 +11,11 @@
     "express-flash": "0.0.2",
     "express-validator": "4.3.0",
     "feedparser-promised": "1.5.0",
+    "memory-cache": "0.2.0",
     "mongoose": "^4.13.10",
     "newsapi": "^2.1.0",
     "nodemon": "^1.14.11",
+    "redis": "2.8.0",
     "save": "^2.3.2"
   },
   "devDependencies": {
