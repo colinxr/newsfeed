@@ -27,7 +27,7 @@ class FeedEntry extends Component {
       title: article.title,
       source: article.meta.title,
       url: article.link,
-      urlToImage: article.urlToImage,
+      urlToImage: article.image.url || ''
     }
 
     this.props.sendToEditor(articleObj);
@@ -58,11 +58,14 @@ class FeedEntry extends Component {
 
     //console.log(article.enclosures[0].url);
 
+    const articleImg = article.image.url || '';
+
     return (
       <div className="feed-entry">
         <Thumbnail
           classname="feed-entry"
           location="ArticleList"
+          url={articleImg}
         />
         {/*<div className="feed-entry__img-wrap">
           <a href={article['rss:link']['#']} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>

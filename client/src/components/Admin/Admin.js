@@ -12,7 +12,8 @@ class Admin extends Component {
     this.state = {
       posts: [],
       articles: [],
-      articleToEdit: []
+      articleToEdit: [],
+      isLoading: true,
     }
 
     this.getPosts = this.getPosts.bind(this);
@@ -25,7 +26,8 @@ class Admin extends Component {
       .then(([posts, articles]) => {
         this.setState({
           posts: posts.data,
-          articles: articles.data
+          articles: articles.data,
+          isLoading: false,
         });
       })
   }
@@ -40,10 +42,12 @@ class Admin extends Component {
   }
 
   render() {
+    const isLoading = {...this.state.isLoading};
+
     return (
       <div className="Admin">
         <header className="Admin-header">
-          <h1 className="Admin-title">A1: NewsFeed</h1>
+          <h1 className="Admin-title"><a href="/">A1: NewsFeed</a></h1>
         </header>
         <div className="admin__container">
           <ArticleList articles={this.state.articles}

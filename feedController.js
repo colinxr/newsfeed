@@ -38,10 +38,7 @@ adminFeedParser = async (req, res) => {
   	'toronto-star-ont': 'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
   	'blog-to':         'http://feeds.feedburner.com/blogto/',
   	'cbc-news-world':  'http://rss.cbc.ca/lineup/world.xml',
-  	'reuters-world':   'http://feeds.reuters.com/Reuters/worldNews',
   	'bbc-world':       'http://feeds.bbci.co.uk/news/world/rss.xml',
-  	'bbc-business':    'http://feeds.bbci.co.uk/news/business/rss.xml',
-  	'bbc-tech':        'http://feeds.bbci.co.uk/news/technology/rss.xml'
   }
 
   const feedUrls = Object
