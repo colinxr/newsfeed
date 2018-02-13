@@ -4,6 +4,7 @@ import axios from 'axios';
 import './Admin.css';
 import ArticleList from '../ArticleList/ArticleList';
 import ArticleEditor from '../ArticleEditor/ArticleEditor';
+import Loading from '../Loading/Loading';
 
 class Admin extends Component {
   constructor() {
@@ -44,21 +45,42 @@ class Admin extends Component {
   render() {
     const isLoading = {...this.state.isLoading};
 
-    return (
-      <div className="Admin">
-        <header className="Admin-header">
-          <h1 className="Admin-title"><a href="/">A1: NewsFeed</a></h1>
-        </header>
-        <div className="admin__container">
-          <ArticleList articles={this.state.articles}
-          sendToEditor={this.sendToEditor}/>
-          <ArticleEditor
-            articleToEdit={this.state.articleToEdit}
-            text={`this is some placeholder text`}
-            />
+    if (!isLoading) {
+      return(
+        <div className="Admin">
+          <header className="Admin-header">
+            <h1 className="Admin-title"><a href="/">A1: NewsFeed</a></h1>
+          </header>
+          <div className="admin__container">
+            <Loading
+              message="Loading, Motherfucker"
+              />
+          </div>
         </div>
-      </div>
-    );
+      )
+    }
+
+    if (isLoading) {
+      return (
+        <div className="Admin">
+          <header className="Admin-header">
+            <h1 className="Admin-title"><a href="/">A1: NewsFeed</a></h1>
+          </header>
+          <div className="admin__container">
+            <ArticleList
+              articles={this.state.articles}
+              sendToEditor={this.sendToEditor}
+            />
+            <ArticleEditor
+              articleToEdit={this.state.articleToEdit}
+            />
+          </div>
+        </div>
+      );
+    }
+
+
+    return null;
   }
 }
 

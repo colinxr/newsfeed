@@ -51,7 +51,7 @@ adminFeedParser = async (req, res) => {
     .then(resp => {
       stories = []
         .concat(...resp) // flattens resp into on array of objects
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron  
       res.send(stories);
     });
 }
