@@ -2,10 +2,12 @@ import React from 'react';
 
 //import './Loading.css';
 
-const Loading = (message) => {
+const Loading = () => {
   return (
-    <div><h4>{message}</h4></div>
-  )
+    <div>
+      <h4>Wiating Motherfucker</h4>
+    </div>
+  );
 }
 
 export default Loading;

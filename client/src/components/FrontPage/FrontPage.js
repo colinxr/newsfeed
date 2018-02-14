@@ -65,7 +65,7 @@ class FrontPage extends React.Component {
             {
               Object
               .keys(posts)
-              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              //.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map(key => <Post key={key} index={key}
                 postInfo={this.state.posts[key]} removePost={this.removePost}/>)
             }
