@@ -1,0 +1,9 @@
+.register-container {
+  width: 450px;
+  margin: 0 auto;
+  transform: translateY(50%);
+}
+
+.login input {
+  border: 1px solid #6a6c6b;
+}

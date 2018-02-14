@@ -2,6 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const Entry = require('./models/Entry');
 const feedController = require('./feedController');
+const userController = require('./userController');
 
 router.get('/', feedController.init);
 
