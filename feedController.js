@@ -33,12 +33,11 @@ cache = (duration) => {
 
 adminFeedParser = async (req, res) => {
   const feeds = {
-  	'the-guardian-us':  'http://www.guardian.co.uk/world/usa/rss',
   	'toronto-star-can':    'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
   	'toronto-star-ont': 'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
-  	'blog-to':         'http://feeds.feedburner.com/blogto/',
-  	'cbc-news-world':  'http://rss.cbc.ca/lineup/world.xml',
-  	'bbc-world':       'http://feeds.bbci.co.uk/news/world/rss.xml',
+  	'blog-to': 'http://feeds.feedburner.com/blogto/',
+  	'cbc-news-world': 'http://rss.cbc.ca/lineup/world.xml',
+    'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml'
   }
 
   const feedUrls = Object
@@ -51,7 +50,7 @@ adminFeedParser = async (req, res) => {
     .then(resp => {
       stories = []
         .concat(...resp) // flattens resp into on array of objects
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron  
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron
       res.send(stories);
     });
 }
