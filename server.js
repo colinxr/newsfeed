@@ -33,11 +33,11 @@ app.use((req, res, next) => {
   next();
 });
 
-const strategy = new Auth0Auth0Strategy({
+const strategy = new Auth0Strategy({
   domain: process.env.AUTH_DOMAIN,
   clientID: process.env.AUTH_CLIENT,
-  clientSecret: proces.env.AUTH_SECRET,
-  callbackURL: proces.env.AUTH_CALLBACK
+  clientSecret: process.env.AUTH_SECRET,
+  callbackURL: process.env.AUTH_CALLBACK
 },
   (accessToken, refreshToken, extramParams, profile, done) => {
   return done(null, profile);
