@@ -1,44 +1,26 @@
 // const NewsAPI = require('newsapi');
 // const newsApi = new NewsAPI(process.env.API_KEY)
-const memCache = require('memory-cache');
+const memCache   = require('memory-cache');
 const feedParser = require('feedparser-promised');
 const Bluebird   = require('bluebird');
+const Entry      = require('./models/Entry');
+const routes     = require('express').Router();
 
-const Entry = require('./models/Entry');
-const routes = require('express').Router();
-
-const controller = require('./feedController');
+//const controller = require('./feedController');
 
 init = (req, res) => {
   res.json({ express: 'Hello from express' });
 }
 
-cache = (duration) => {
-  return (req, res, next) => {
-    let key = '__express__'+req.originalUrl || req.url;
-    let cachedBody = memCache.get(key);
-
-    if (cachedBody) {
-      res.send(cachedBody);
-      return
-    } else {
-      res.sendResponse = res.send;
-      res.send = (body) => {
-        memCache.put(key, body, duration * 1000);
-        res.sendResponse(body);
-      }
-    }
-  }
-}
-
 adminFeedParser = async (req, res) => {
   const feeds = {
-  	'toronto-star-can':    'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
-  	'toronto-star-ont': 'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
-  	'blog-to': 'http://feeds.feedburner.com/blogto/',
-  	'cbc-news-world': 'http://rss.cbc.ca/lineup/world.xml',
+    'toronto-star-can':    'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
+    'toronto-star-ont': 'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
+    'blog-to': 'http://feeds.feedburner.com/blogto/',
+    'cbc-news-world': 'http://rss.cbc.ca/lineup/world.xml',
     'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml'
   }
+
 
   const feedUrls = Object
       .keys(feeds)
@@ -130,7 +112,6 @@ deletePost = (req, res) => {
 
 module.exports = {
   init,
-  cache,
   adminFeedParser,
   adminFeedNewsApi,
   getPosts,

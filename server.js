@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const Auth0Strategy = require('passport-auth0');
 const path = require('path');
 const expressValidator = require('express-validator');
 const flash = require('express-flash');
@@ -32,6 +32,26 @@ app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
+
+const strategy = new Auth0Auth0Strategy({
+  domain: process.env.AUTH_DOMAIN,
+  clientID: process.env.AUTH_CLIENT,
+  clientSecret: proces.env.AUTH_SECRET,
+  callbackURL: proces.env.AUTH_CALLBACK
+},
+  (accessToken, refreshToken, extramParams, profile, done) => {
+  return done(null, profile);
+});
+
+passport.use(strategy);
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes);
 
