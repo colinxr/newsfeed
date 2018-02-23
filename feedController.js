@@ -1,33 +1,42 @@
-// const NewsAPI = require('newsapi');
-// const newsApi = new NewsAPI(process.env.API_KEY)
-const memCache   = require('memory-cache');
 const feedParser = require('feedparser-promised');
 const Bluebird   = require('bluebird');
+const feeds      = require('./feeds').feeds;
 const Entry      = require('./models/Entry');
 const routes     = require('express').Router();
 
-//const controller = require('./feedController');
+parseFeed = (feed) => {
+  let articles = [];
 
-init = (req, res) => {
-  res.json({ express: 'Hello from express' });
-}
-
-adminFeedParser = async (req, res) => {
-  const feeds = {
-    'toronto-star-can':    'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
-    'toronto-star-ont': 'http://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.queenspark.rss',
-    'blog-to': 'http://feeds.feedburner.com/blogto/',
-    'cbc-news-world': 'http://rss.cbc.ca/lineup/world.xml',
-    'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml'
+  const httpConfig = {
+    uri: feed,
+    gzip: true,
   }
 
+  const fpConfig = {
+    feedurl: feed,
+    addmeta: true
+  }
 
+  return feedParser.parse(httpConfig, fpConfig)
+    .then(items => {
+      articles = items.map(item => item);
+      //console.log(articles.length);
+      return articles;
+    })
+    .catch(err => console.log('Error: ' + err));
+}
+
+adminFeed = async (req, res) => {
+  // takes feeds object and pulls out all of the individual properties
   const feedUrls = Object
-      .keys(feeds)
-      .map(key => feeds[key]);
+    .keys(feeds)
+    .map(key => Object.values(feeds[key]))
+    .reduce((a,b) => a.concat(b));
 
+  // parses the indivdual urls and holds them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
 
+  // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
     .then(resp => {
       stories = []
@@ -37,27 +46,37 @@ adminFeedParser = async (req, res) => {
     });
 }
 
-parseFeed = (feed) => {
-    let articles = [];
+categoryFeed = async (req, res) => {
+  // get the category
+  const cat = req.params.category;
 
-    const httpConfig = {
-      uri: feed,
-      gzip: true,
-    }
+  // get the urls from that particular category in Feeds Object
+  const feedUrls = Object
+    .keys(feeds[cat])
+    .map(key => feeds[cat][key]);
 
-    const fpConfig = {
-      addmeta: true
-    }
+  // parses the indivdual urls and holds them in this variable
+  const promises = feedUrls.map(feed => parseFeed(feed));
 
-    return feedParser.parse(httpConfig, fpConfig)
-      .then(items => {
-        articles = items.map(item => item);
-        //console.log(articles.length);
-        return articles;
-      })
-      .catch(err => console.log('Error: ' + err));
+  // once all promises return values, flatten them in one array, sort it then send off to front-end
+  Bluebird.all(promises)
+    .then(resp => {
+      stories = []
+        .concat(...resp) // flattens resp into on array of objects
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron
+      res.send(stories);
+    });
+}
 
+singleFeed = (req, res) => {
+  const cat = req.params.category;
+  const id  = req.params.id;
 
+  const feedUrl = feeds[cat][id];
+  console.log(feedUrl);
+
+  parseFeed(feedUrl)
+    .then(resp => res.send(resp));
 }
 
 adminFeedNewsApi = (req, res) => {
@@ -111,8 +130,9 @@ deletePost = (req, res) => {
 }
 
 module.exports = {
-  init,
-  adminFeedParser,
+  adminFeed,
+  categoryFeed,
+  singleFeed,
   adminFeedNewsApi,
   getPosts,
   savePost,
