@@ -79,25 +79,6 @@ singleFeed = (req, res) => {
     .then(resp => res.send(resp));
 }
 
-adminFeedNewsApi = (req, res) => {
-  const ts = new Date();
-  const isoDate = ts.toISOString();
-  const date = isoDate.substr(0, 9);
-
-  const sources = ['cbc-news', 'the-globe-and-mail', 'financial-post', 'the-new-york-times', 'the-verge', 'the-washington-post', 'new-york-magazine'];
-  const domains = ['thestar.com','blogto.com','torontoist.com','sharpmagazine.com'];
-
-  newsApi.v2.everything({
-    sources: sources.join(),
-    domains: domains.join(),
-    sortBy: 'publishedAt',
-    from: date,
-    language: 'en'
-  }).then(response => {
-    res.send(response);
-  });
-}
-
 getPosts = (req, res) => {
   Entry.find()
     .sort({ date: -1 })
@@ -130,12 +111,8 @@ deletePost = (req, res) => {
 }
 
 module.exports = {
+  parseFeed,
   adminFeed,
   categoryFeed,
-  singleFeed,
-  adminFeedNewsApi,
-  getPosts,
-  savePost,
-  deletePost,
-  parseFeed
+  singleFeed
 }
