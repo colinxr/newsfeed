@@ -32,10 +32,8 @@ adminFeed = async (req, res) => {
     .keys(feeds)
     .map(key => Object.values(feeds[key]))
     .reduce((a,b) => a.concat(b));
-
   // parses the indivdual urls and holds them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
-
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
     .then(resp => {
@@ -49,12 +47,10 @@ adminFeed = async (req, res) => {
 categoryFeed = async (req, res) => {
   // get the category
   const cat = req.params.category;
-
   // get the urls from that particular category in Feeds Object
   const feedUrls = Object
     .keys(feeds[cat])
     .map(key => feeds[cat][key]);
-
   // parses the indivdual urls and holds them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
 
@@ -69,45 +65,13 @@ categoryFeed = async (req, res) => {
 }
 
 singleFeed = (req, res) => {
-  const cat = req.params.category;
-  const id  = req.params.id;
-
-  const feedUrl = feeds[cat][id];
-  console.log(feedUrl);
-
+  // set the params
+  const { cat, id } = req.params;
+  // set get the feed url
+  const feedUrl = feeds.toronto[id];
+  // parse feed then send results
   parseFeed(feedUrl)
     .then(resp => res.send(resp));
-}
-
-getPosts = (req, res) => {
-  Entry.find()
-    .sort({ date: -1 })
-    .then(data => {
-      res.send(data);
-    }).catch(err =>{
-      res.send(err);
-    });
-}
-
-savePost = (req, res) => {
-  // NLP stuff to determine topic and theme
-  const newEntry = new Entry(req.body);
-  newEntry.save()
-    .then(entry => {
-      res.send({
-        success: true,
-        message: 'Post Added Successfully'
-      });
-    })
-    .catch(err => {
-      res.send(err);
-    });
-}
-
-deletePost = (req, res) => {
-  Entry.remove({ _id: req.params.id})
-    .then(entry => res.send({ message: 'Post has been deleted.' }))
-    .catch(err => res.send({ message: 'error' }));
 }
 
 module.exports = {
