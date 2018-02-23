@@ -8,7 +8,8 @@ const entrySchema = new mongoose.Schema({
   source: String,
   url: { type: String },
   urlToImage: {},
-  priority: Number
+  priority: Number,
+  entities: []
 });
 
 const Entry = mongoose.model('Entry', entrySchema);

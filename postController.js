@@ -1,19 +1,59 @@
 const Bluebird   = require('bluebird');
+const language   = require('@google-cloud/language');
 const Entry      = require('./models/Entry');
 const routes     = require('express').Router();
+
+const client     = new language.LanguageServiceClient()
 
 getPosts = (req, res) => {
   Entry.find()
     .sort({ date: -1 })
-    .then(data => {
-      res.send(data);
-    }).catch(err =>{
-      res.send(err);
-    });
+    .then(data => res.send(data))
+    .catch(err => res.send(err));
+}
+
+analyzePost = (req, res, next) => {
+  console.log('analyzing post');
+  const title = req.body.title;
+  const desc = req.body.description;
+
+  const text = `${title}. ${desc}`;
+  const document = {
+    content: text,
+    type: 'PLAIN_TEXT',
+  };
+
+  const topics = [];
+
+  client
+    .analyzeEntities({ document })
+    .then(results => {
+      const entities = results[0].entities;
+      entities.forEach(entity => {
+        console.log(entity.name);
+        console.log(` - Type: ${entity.type}, Salience: ${entity.salience}`);
+        if (entity.metadata && entity.metadata.wikipedia_url) {
+          console.log(` - Wikipedia URL: ${entity.metadata.wikipedia_url}$`);
+        }
+        if (entity.salience > 0.2) {
+          topics.push(entity.name);
+        }
+      });
+      console.log(topics);
+      req.body.entities = topics;
+    })
+   .catch(err => {
+     console.error('ERROR:', err);
+   });
+
+  // console.log(topics);
+  // req.entities = topics;
+
+  next();
 }
 
 savePost = (req, res) => {
-  // NLP stuff to determine topic and theme
+  console.log(req.body.entities);
   const newEntry = new Entry(req.body);
   newEntry.save()
     .then(entry => {
@@ -28,13 +68,14 @@ savePost = (req, res) => {
 }
 
 deletePost = (req, res) => {
-  Entry.remove({ _id: req.params.id})
+  Entry.remove({ _id: req.params.id })
     .then(entry => res.send({ message: 'Post has been deleted.' }))
     .catch(err => res.send({ message: 'error' }));
 }
 
 module.exports = {
   getPosts,
+  analyzePost,
   savePost,
   deletePost
 }
