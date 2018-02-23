@@ -27,19 +27,20 @@ parseFeed = (feed) => {
 }
 
 adminFeed = async (req, res) => {
-  // takes feeds object and pulls out all of the individual properties
+  // take feeds object and pull out all of the individual properties
   const feedUrls = Object
     .keys(feeds)
     .map(key => Object.values(feeds[key]))
     .reduce((a,b) => a.concat(b));
-  // parses the indivdual urls and holds them in this variable
+  // parse the indivdual urls and hold them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
     .then(resp => {
       stories = []
-        .concat(...resp) // flattens resp into on array of objects
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron
+        .concat(...resp) // flatten resp into on array of objects
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sort stories by reverse chron
+
       res.send(stories);
     });
 }
@@ -65,9 +66,9 @@ categoryFeed = async (req, res) => {
 }
 
 singleFeed = (req, res) => {
-  // set the params
+  // set the param variables
   const { cat, id } = req.params;
-  // set get the feed url
+  // set the feed url
   const feedUrl = feeds.toronto[id];
   // parse feed then send results
   parseFeed(feedUrl)
