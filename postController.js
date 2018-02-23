@@ -39,8 +39,8 @@ analyzePost = (req, res, next) => {
           topics.push(entity.name);
         }
       });
-      console.log(topics);
       req.body.entities = topics;
+      console.log(req.body.entities);
     })
    .catch(err => {
      console.error('ERROR:', err);
@@ -53,7 +53,6 @@ analyzePost = (req, res, next) => {
 }
 
 savePost = (req, res) => {
-  console.log(req.body.entities);
   const newEntry = new Entry(req.body);
   newEntry.save()
     .then(entry => {
