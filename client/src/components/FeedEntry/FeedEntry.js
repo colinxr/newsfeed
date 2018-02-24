@@ -11,23 +11,28 @@ class FeedEntry extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.apiPost = this.apiPost.bind(this);
+    this.getImgUrl = this.getImgUrl.bind(this);
+    this.decodeHtmlEntity = this.decodeHtmlEntity.bind(this);
   }
 
   handleClick(e) {
     e.preventDefault();
     const article = this.props.articleInfo;
 
-    const stripTags = article.description.replace(/(<([^>]+)>)/ig,"");
-    const desc = stripTags.slice(0,250) + '...';
+    const stripTags = article.description.replace(/(<([^>]+)>)/ig,"").trim();
+    const decode = this.decodeHtmlEntity(stripTags);
+    const excerpt = decode.slice(0,250).trim() + '...';
+    const articleImg = this.getImgUrl();
 
     const articleObj = {
       date: article.pubDate,
-      description: desc,
+      excerpt: excerpt,
+      description: stripTags,
       originalTitle: article.title,
       title: article.title,
       source: article.meta.title,
       url: article.link,
-      urlToImage: article.image.url || ''
+      urlToImage: articleImg
     }
 
     this.props.sendToEditor(articleObj);
@@ -49,16 +54,53 @@ class FeedEntry extends Component {
 
     return body;
   }
+  
+  getImgUrl() {
+    const article = this.props.articleInfo;
+    let imgUrl;
+    
+    if (article.image.url) {
+      console.log('image is in image.url');
+      imgUrl = article.image.url;
+      
+      return imgUrl;
+    }
+    
+    const imgInDesc = article.description.includes('<img src=');
+    
+    if (imgInDesc) {
+      console.log('preform regex to extract img src');
+      const desc = article.description;
+      const regex = /<img.*?src=['"](.*?)['"]/;
+      const imgUrl = regex.exec(desc)[1];;
+      
+      return imgUrl;
+    }
+    
+    if (article.enclosures.length) {
+      console.log('img src is in enclosures');
+      let imgUrl = article.enclosures[0].url;
+      return imgUrl;
+    }
+  }
+  
+  decodeHtmlEntity(str) {
+    return str.replace(/&#(\d+);/g, function(match, dec) {
+      return String.fromCharCode(dec);
+    });
+  }
 
   render() {
     const article = this.props.articleInfo;
     const stripTags = article.description.replace(/(<([^>]+)>)/ig,"");
-
-    const desc = stripTags.slice(0,250) + '...';
-
-    //console.log(article.enclosures[0].url);
-
-    const articleImg = article.image.url || '';
+    const decode = this.decodeHtmlEntity(stripTags);
+    const desc = decode.slice(0,250).trim() + '...';
+    
+    const articleImg = this.getImgUrl();
+    
+    if (article.enclosures[0]) {
+      const articleImg = article.enclosures[0];
+    }
 
     return (
       <div className="feed-entry">

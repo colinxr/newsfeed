@@ -57,7 +57,7 @@ class ArticleEditor extends Component {
 
     post.title = this.formTitle.value;
     post.source = this.formSource.value;
-    post.description = this.formDesc.value;
+    post.excerpt = this.formExcerpt.value;
 
     this.setState({
       post: post,
@@ -92,7 +92,7 @@ class ArticleEditor extends Component {
         <div>
           <h3 id="article-title">{post.title}</h3>
           <h4 id="article-source">{post.source}</h4>
-          <p id="article-description">{post.description}</p>
+          <p id="article-description">{post.excerpt}</p>
         </div>
         {this.renderButton()}
       </div>
@@ -106,7 +106,7 @@ class ArticleEditor extends Component {
         <form className="editor__form" onSubmit={(e) => this.submitForm(e)}>
           <textarea id="article-title" type="text" name="article-title" defaultValue={post.originalTitle} onChange={(e) => this.handleTitle(e)} required autoComplete="off" ref={(title) => {this.formTitle = title}}></textarea>
           <input id="article-source" type="text" name="article-source" defaultValue={post.source} required autoComplete="off" ref={(source) => {this.formSource = source}}  />
-          <textarea id="article-description" type="text" name="article-description" defaultValue={post.description} required autoComplete="off" ref={(desc) => {this.formDesc = desc}}></textarea>
+          <textarea id="article-description" type="text" name="article-description" defaultValue={post.excerpt} required autoComplete="off" ref={(desc) => {this.formExcerpt = desc}}></textarea>
         </form>
         {this.renderButton()}
       </div>

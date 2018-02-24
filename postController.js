@@ -15,7 +15,9 @@ getPosts = (req, res) => {
 analyzeEntities = (req, res, next) => {
   console.log('analyzing post');
   const title = req.body.title;
-  const desc = req.body.description;
+  const desc = req.body.excerpt;
+
+  console.log(desc);
 
   const text = `${title}. ${desc}`;
   const document = {

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const entrySchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
   description: String,
+  excerpt: String,
   originalTitle: String,
   title: { type: String },
   source: String,
