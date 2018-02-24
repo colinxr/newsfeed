@@ -11,30 +11,13 @@ class Admin extends Component {
     super();
 
     this.state = {
-      posts: [],
-      articles: [],
       articleToEdit: [],
+      category: 'all',
       isLoading: true,
     }
 
-    this.getPosts = this.getPosts.bind(this);
-    this.getArticles = this.getArticles.bind(this);
     this.sendToEditor = this.sendToEditor.bind(this);
   }
-
-  componentDidMount() {
-    Promise.all([this.getPosts(), this.getArticles()])
-      .then(([posts, articles]) => {
-        this.setState({
-          isLoading: false,
-          posts: posts.data,
-          articles: articles.data
-        });
-      })
-  }
-
-  getPosts = () => { return axios.get('api/posts'); }
-  getArticles = () => { return axios.get('/api/feeds'); }
 
   sendToEditor = (obj) => {
     this.setState({
@@ -52,7 +35,7 @@ class Admin extends Component {
         </header>
         <div className="admin__container">
           <ArticleList
-            articles={this.state.articles}
+            category={this.state.category}
             sendToEditor={this.sendToEditor}
           />
           <ArticleEditor

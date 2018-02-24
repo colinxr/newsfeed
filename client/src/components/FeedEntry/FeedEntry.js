@@ -60,16 +60,12 @@ class FeedEntry extends Component {
     let imgUrl;
     
     if (article.image.url) {
-      console.log('image is in image.url');
       imgUrl = article.image.url;
-      
       return imgUrl;
     }
     
     const imgInDesc = article.description.includes('<img src=');
-    
     if (imgInDesc) {
-      console.log('preform regex to extract img src');
       const desc = article.description;
       const regex = /<img.*?src=['"](.*?)['"]/;
       const imgUrl = regex.exec(desc)[1];;
@@ -78,7 +74,6 @@ class FeedEntry extends Component {
     }
     
     if (article.enclosures.length) {
-      console.log('img src is in enclosures');
       let imgUrl = article.enclosures[0].url;
       return imgUrl;
     }
