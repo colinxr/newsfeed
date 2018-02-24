@@ -12,7 +12,7 @@ getPosts = (req, res) => {
     .catch(err => res.send(err));
 }
 
-analyzePost = (req, res, next) => {
+analyzeEntities = (req, res, next) => {
   console.log('analyzing post');
   const title = req.body.title;
   const desc = req.body.description;
@@ -35,24 +35,26 @@ analyzePost = (req, res, next) => {
         if (entity.metadata && entity.metadata.wikipedia_url) {
           console.log(` - Wikipedia URL: ${entity.metadata.wikipedia_url}$`);
         }
-        if (entity.salience > 0.2) {
+        if (entity.salience > 0.18) {
           topics.push(entity.name);
         }
       });
       req.body.entities = topics;
-      console.log(req.body.entities);
+      // console.log(req.body.entities);
+      next();
     })
    .catch(err => {
      console.error('ERROR:', err);
+     res.status(500).send(err.message);
    });
 
   // console.log(topics);
   // req.entities = topics;
-
-  next();
 }
 
 savePost = (req, res) => {
+  console.log('saving');
+  console.log(req.body.entities);
   const newEntry = new Entry(req.body);
   newEntry.save()
     .then(entry => {
@@ -74,7 +76,7 @@ deletePost = (req, res) => {
 
 module.exports = {
   getPosts,
-  analyzePost,
+  analyzeEntities,
   savePost,
   deletePost
 }

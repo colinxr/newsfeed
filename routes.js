@@ -9,8 +9,20 @@ router.get('/api/feeds/:category', feedController.categoryFeed);
 router.get('/api/feeds/:category/:id', feedController.singleFeed);
 
 //front page routes
-router.get('/api/posts', postController.getPosts);
-router.post('/api/posts', postController.analyzePost, postController.savePost);
-router.delete('/api/posts/:id', postController.deletePost);
+router.get(
+  '/api/posts',
+  postController.getPosts
+);
+
+router.post(
+  '/api/posts',
+  postController.analyzeEntities,
+  postController.savePost
+);
+
+router.delete(
+  '/api/posts/:id',
+  postController.deletePost
+);
 
 module.exports = router;
