@@ -16,13 +16,13 @@ class ArticleList extends Component {
     }
     
     this.getAllArticles = this.getAllArticles.bind(this);
+    this.getCatArticles = this.getCatArticles.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
   }
   
   componentDidMount() {
     Promise.all([this.getAllArticles()])
       .then((articles) => {
-        console.log(articles);
         this.setState({
           isLoading: false,
           articles: articles[0].data
@@ -32,9 +32,23 @@ class ArticleList extends Component {
         this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
       });
   }
+  
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.category !== this.props.category) {
+      console.log(nextProps.category)
+      Promise.all([this.getCatArticles(nextProps.category)])
+        .then(articles => {
+          this.setState({ articles: articles[0].data });
+        })
+        .catch(err => {
+          this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
+        });
+    }
+  }
 
   // getPosts = () => { return axios.get('api/posts'); }
   getAllArticles = () => { return axios.get('/api/feeds'); }
+  getCatArticles = (cat) => { return axios.get(`/api/feeds/${cat}`); }
   
   renderHeader() {
     
