@@ -17,10 +17,10 @@ class ArticleList extends Component {
     
     this.getAllArticles = this.getAllArticles.bind(this);
     this.getCatArticles = this.getCatArticles.bind(this);
-    this.renderHeader = this.renderHeader.bind(this);
   }
   
   componentDidMount() {
+    // change this no promise
     Promise.all([this.getAllArticles()])
       .then((articles) => {
         this.setState({
@@ -36,6 +36,7 @@ class ArticleList extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.category !== this.props.category) {
       console.log(nextProps.category)
+      //change this, no promise
       Promise.all([this.getCatArticles(nextProps.category)])
         .then(articles => {
           this.setState({ articles: articles[0].data });
@@ -49,10 +50,6 @@ class ArticleList extends Component {
   // getPosts = () => { return axios.get('api/posts'); }
   getAllArticles = () => { return axios.get('/api/feeds'); }
   getCatArticles = (cat) => { return axios.get(`/api/feeds/${cat}`); }
-  
-  renderHeader() {
-    
-  }
 
   render() {
     const { errMessage, articles } = this.state;
@@ -66,6 +63,9 @@ class ArticleList extends Component {
     }
     return (
       <div className="feed-entries">
+        <div className="feed-header">
+          <h2>{this.props.category} Feed</h2>
+        </div>
         {
           Object
           .keys(articles)
