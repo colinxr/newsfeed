@@ -19,10 +19,15 @@ class Admin extends Component {
 
     this.sendToEditor = this.sendToEditor.bind(this);
     this.selectCat = this.selectCat.bind(this);
+    this.clearEditor = this.clearEditor.bind(this);
   }
 
   sendToEditor = (obj) => {
     this.setState({ articleToEdit: obj });
+  }
+
+  clearEditor = () => {
+    this.setState({ articleToEdit: [] });
   }
 
   selectCat = (category) => {
@@ -47,6 +52,7 @@ class Admin extends Component {
           </div>
           <ArticleEditor
             articleToEdit={this.state.articleToEdit}
+            clearEditor={this.clearEditor}
           />
         </div>
       </div>

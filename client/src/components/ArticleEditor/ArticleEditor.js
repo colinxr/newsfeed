@@ -70,6 +70,7 @@ class ArticleEditor extends Component {
     if (this.state.editing === true) this.setState({ editing : false });
 
     this.apiPost(this.state.post);
+    this.props.clearEditor();
   }
 
   apiPost = async (obj) => {
