@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Admin.css';
+import CategoryList from '../CategoryList/CategoryList';
 import ArticleList from '../ArticleList/ArticleList';
 import ArticleEditor from '../ArticleEditor/ArticleEditor';
 import Loading from '../Loading/Loading';
@@ -17,12 +18,15 @@ class Admin extends Component {
     }
 
     this.sendToEditor = this.sendToEditor.bind(this);
+    this.selectCat = this.selectCat.bind(this);
   }
 
   sendToEditor = (obj) => {
-    this.setState({
-      articleToEdit: obj
-    });
+    this.setState({ articleToEdit: obj });
+  }
+
+  selectCat = (category) => {
+    this.setState({ category });
   }
 
   render() {
@@ -34,10 +38,13 @@ class Admin extends Component {
           <h1 className="Admin-title"><a href="/">A1: NewsFeed</a></h1>
         </header>
         <div className="admin__container">
-          <ArticleList
-            category={this.state.category}
-            sendToEditor={this.sendToEditor}
-          />
+          <div>
+            <CategoryList selectCat={this.selectCat} />
+            <ArticleList
+              category={this.state.category}
+              sendToEditor={this.sendToEditor}
+            />
+          </div>
           <ArticleEditor
             articleToEdit={this.state.articleToEdit}
           />

@@ -11,7 +11,7 @@ const feeds = {
     'cbc-toronto': 'http://rss.cbc.ca/lineup/canada-toronto.xml',
     'blog-to': 'http://feeds.feedburner.com/blogto/'
   },
-  us: {
+  usa: {
     'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml',
     'nyt-politics': 'http://rss.nytimes.com/services/xml/rss/nyt/Politics.xml'
   },
