@@ -4,6 +4,14 @@ const feeds      = require('./feeds').feeds;
 const Entry      = require('./models/Entry');
 const routes     = require('express').Router();
 
+getCategories = (req, res) => {
+  const feedCats = Object
+  .keys(feeds)
+  .map(key => key);
+
+  res.send(feedCats);
+}
+
 parseFeed = (feed) => {
   let articles = [];
 
@@ -76,6 +84,7 @@ singleFeed = (req, res) => {
 }
 
 module.exports = {
+  getCategories,
   parseFeed,
   adminFeed,
   categoryFeed,
