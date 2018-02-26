@@ -38,7 +38,7 @@ class CategoryList extends Component {
 
     return (
       <ul className="category-list">
-        <li>Show All</li>
+        <li><a href="#" onClick={(e) => {this.handleClick(e)}}>Show All</a></li>
         <li>Twitter</li>
         {
           Object

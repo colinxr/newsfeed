@@ -37,6 +37,7 @@ class ArticleList extends Component {
     if(nextProps.category !== this.props.category) {
       console.log(nextProps.category)
       this.setState({ articles: {} });
+
       //change this, no promise
       Promise.all([this.getCatArticles(nextProps.category)])
         .then(articles => {
