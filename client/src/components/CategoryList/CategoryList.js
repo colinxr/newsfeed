@@ -27,17 +27,24 @@ class CategoryList extends Component {
 
   getCategories = () => { return axios.get('/api/feeds/categories'); }
 
+  handleClick(e) {
+    e.preventDefault();
+    const newCategory = e.currentTarget.innerHTML;
+    this.props.selectCat(newCategory);
+  }
+
   render() {
     const categories = this.state.categories;
 
     return (
       <ul className="category-list">
         <li>Show All</li>
+        <li>Twitter</li>
         {
           Object
           .keys(categories)
           .map(key => {
-            return <li>{categories[key]}</li>;
+            return <li key={key} id={key}><a href="#" onClick={(e) => {this.handleClick(e)}}>{categories[key]}</a></li>;
           })
         }
 
