@@ -14,11 +14,11 @@ class ArticleList extends Component {
       isLoading: true,
       errMessage: null
     }
-    
+
     this.getAllArticles = this.getAllArticles.bind(this);
     this.getCatArticles = this.getCatArticles.bind(this);
   }
-  
+
   componentDidMount() {
     // change this no promise
     Promise.all([this.getAllArticles()])
@@ -32,10 +32,11 @@ class ArticleList extends Component {
         this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
       });
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.category !== this.props.category) {
       console.log(nextProps.category)
+      this.setState({ articles: {} });
       //change this, no promise
       Promise.all([this.getCatArticles(nextProps.category)])
         .then(articles => {
@@ -53,7 +54,7 @@ class ArticleList extends Component {
 
   render() {
     const { errMessage, articles } = this.state;
-    
+
     if (this.state.errMessage !== null) {
       return (
         <div className="feed-error">
@@ -69,7 +70,7 @@ class ArticleList extends Component {
         {
           Object
           .keys(articles)
-          .map(key => 
+          .map(key =>
             <FeedEntry key={key} index={key}
               articleInfo={articles[key]}
               sendToEditor={this.props.sendToEditor}/>
