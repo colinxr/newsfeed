@@ -39,12 +39,17 @@ class ArticleList extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.category !== this.props.category) {
       console.log(nextProps.category)
-      this.setState({ articles: {} });
+      this.setState({
+        isLoading: true,
+        articles: {}
+      });
 
       //change this, no promise
       Promise.all([this.getCatArticles(nextProps.category)])
         .then(articles => {
-          this.setState({ articles: articles[0].data });
+          this.setState({
+            isLoading: false,
+            articles: articles[0].data });
         })
         .catch(err => {
           this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
