@@ -5,7 +5,6 @@ import './Admin.css';
 import CategoryList from '../CategoryList/CategoryList';
 import ArticleList from '../ArticleList/ArticleList';
 import ArticleEditor from '../ArticleEditor/ArticleEditor';
-import Loading from '../Loading/Loading';
 
 class Admin extends Component {
   constructor() {

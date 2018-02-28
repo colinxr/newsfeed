@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import './ArticleList.css';
 
+import LoadingEntry from '../LoadingEntry/LoadingEntry';
 import FeedEntry from '../FeedEntry/FeedEntry';
 
 class ArticleList extends Component {
@@ -29,7 +30,9 @@ class ArticleList extends Component {
         });
       })
       .catch(err => {
-        this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
+        this.setState({
+          isLoading: false,
+          errMessage: 'There\'s been an error with the Server, please try again.' });
       });
   }
 
@@ -54,31 +57,44 @@ class ArticleList extends Component {
   getCatArticles = (cat) => { return axios.get(`/api/feeds/${cat}`); }
 
   render() {
-    const { errMessage, articles } = this.state;
+    const { isLoading, errMessage, articles } = this.state;
 
-    if (this.state.errMessage !== null) {
+    if (isLoading === true) {
       return (
-        <div className="feed-error">
-          <h2>{errMessage}</h2>
+        <div>
+          <LoadingEntry />
+          <LoadingEntry />
+          <LoadingEntry />
+          <LoadingEntry />
+          <LoadingEntry />
         </div>
       )
-    }
-    return (
-      <div className="feed-entries">
-        <div className="feed-header">
-          <h2>{this.props.category} Feed</h2>
+    } else {
+      if (this.state.errMessage !== null) {
+        return (
+          <div className="feed-error">
+            <h2>{errMessage}</h2>
+          </div>
+        )
+      }
+
+      return (
+        <div className="feed-entries">
+          <div className="feed-header">
+            <h2>{this.props.category} Feed</h2>
+          </div>
+          {
+            Object
+            .keys(articles)
+            .map(key =>
+              <FeedEntry key={key} index={key}
+                articleInfo={articles[key]}
+                sendToEditor={this.props.sendToEditor}/>
+            )
+          }
         </div>
-        {
-          Object
-          .keys(articles)
-          .map(key =>
-            <FeedEntry key={key} index={key}
-              articleInfo={articles[key]}
-              sendToEditor={this.props.sendToEditor}/>
-          )
-        }
-      </div>
-    );
+      );
+    }
   }
 }
 

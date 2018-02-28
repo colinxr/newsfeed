@@ -135,7 +135,7 @@ class ArticleEditor extends Component {
   }
 
   render() {
-    const { post, message, editing } = {...this.state};
+    const { post, message, editing } = this.state;
 
     if (post === null && message === null) return null;
 
