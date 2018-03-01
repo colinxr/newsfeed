@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import './CategoryList.css';
+
 class CategoryList extends Component {
   constructor() {
     super();
@@ -44,7 +46,7 @@ class CategoryList extends Component {
     return (
       <ul className="category-list">
         <li><a href="#" onClick={(e) => {this.handleReset(e)}}>Show All</a></li>
-        <li>Twitter</li>
+        <li><a href="#">Twitter</a></li>
         {
           Object
           .keys(categories)
