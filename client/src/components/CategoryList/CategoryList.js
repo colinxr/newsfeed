@@ -33,12 +33,17 @@ class CategoryList extends Component {
     this.props.selectCat(newCategory);
   }
 
+  handleReset(e) {
+    e.preventDefault();
+    this.props.selectCat('all');
+  }
+
   render() {
     const categories = this.state.categories;
 
     return (
       <ul className="category-list">
-        <li><a href="#" onClick={(e) => {this.handleClick(e)}}>Show All</a></li>
+        <li><a href="#" onClick={(e) => {this.handleReset(e)}}>Show All</a></li>
         <li>Twitter</li>
         {
           Object

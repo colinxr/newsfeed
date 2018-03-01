@@ -44,6 +44,16 @@ class ArticleList extends Component {
         articles: {}
       });
 
+      if (nextProps.category === 'all') {
+        Promise.all([this.getAllArticles()])
+          .then(articles => {
+            this.setState({
+              isLoading: false,
+              articles: articles[0].data
+            });
+            return;
+          })
+      } else {
       //change this, no promise
       Promise.all([this.getCatArticles(nextProps.category)])
         .then(articles => {
@@ -54,6 +64,7 @@ class ArticleList extends Component {
         .catch(err => {
           this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
         });
+      }
     }
   }
 
