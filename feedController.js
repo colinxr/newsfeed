@@ -27,7 +27,10 @@ parseFeed = (feed) => {
 
   return feedParser.parse(httpConfig, fpConfig)
     .then(items => {
-      articles = items.map(item => item);
+      articles = items.map(item => {
+        // asign newsfeed score
+        return item;
+      });
       //console.log(articles.length);
       return articles;
     })
