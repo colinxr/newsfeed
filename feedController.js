@@ -33,7 +33,7 @@ parseFeed = (feed) => {
         const now = Date.now() / 1000
         const pubDate = Date.parse(item[`rss:pubdate`][`#`]) / 1000;
 
-        // return item if item is no more than 24 hours.
+        // Only show posts from last 24 hours in admin backend feed
         if ((now - pubDate) > 86400)  {
           //console.log(date);
           articles.push(item);
