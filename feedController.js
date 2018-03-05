@@ -27,9 +27,17 @@ parseFeed = (feed) => {
 
   return feedParser.parse(httpConfig, fpConfig)
     .then(items => {
-      articles = items.map(item => {
+      let articles = [];
+      items.map(item => {
         // asign newsfeed score
-        return item;
+        const now = Date.now() / 1000
+        const pubDate = Date.parse(item[`rss:pubdate`][`#`]) / 1000;
+
+        // return item if item is no more than 24 hours.
+        if ((now - pubDate) > 86400)  {
+          //console.log(date);
+          articles.push(item);
+        }
       });
       //console.log(articles.length);
       return articles;
@@ -51,7 +59,7 @@ adminFeed = async (req, res) => {
       stories = []
         .concat(...resp) // flatten resp into on array of objects
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sort stories by reverse chron
-
+        // console.log(stories[0]);
       res.send(stories);
     });
 }
