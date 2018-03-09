@@ -6,8 +6,8 @@ const routes     = require('express').Router();
 
 getCategories = (req, res) => {
   const feedCats = Object
-  .keys(feeds)
-  .map(key => key);
+    .keys(feeds)
+    .map(key => key);
 
   res.send(feedCats);
 }
@@ -22,7 +22,8 @@ parseFeed = (feed) => {
 
   const fpConfig = {
     feedurl: feed,
-    addmeta: true
+    addmeta: false,
+    normalize: true
   }
 
   return feedParser.parse(httpConfig, fpConfig)
@@ -34,7 +35,12 @@ parseFeed = (feed) => {
         const pubDate = Date.parse(item[`rss:pubdate`][`#`]) / 1000;
 
         // Only show posts from last 24 hours in admin backend feed
-        if ((now - pubDate) > 86400) articles.push(item);
+        if ((now - pubDate) > 86400) {
+          item.newsMeta = {
+
+          };
+          articles.push(item);
+        }
       });
 
       return articles;
@@ -53,10 +59,11 @@ adminFeed = async (req, res) => {
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
     .then(resp => {
+      console.log(typeof(resp));
       stories = []
         .concat(...resp) // flatten resp into on array of objects
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sort stories by reverse chron
-        // console.log(stories[0]);
+        console.dir(stories[0], {depth: null, colors: true});
       res.send(stories);
     });
 }
