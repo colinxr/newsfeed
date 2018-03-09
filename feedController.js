@@ -120,11 +120,19 @@ categoryFeed = async (req, res) => {
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
-    .then(resp => {
-      stories = []
-        .concat(...resp) // flattens resp into on array of objects
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sorts stories by reverse chron
-      res.send(stories);
+    .then(data => {
+      stories = [].concat(...data) // flatten resp into on array of objects
+      return stories;
+    })
+    .then(stories => {
+      const feedStories = stories.map(story => analyzeArticle(story));
+
+      Bluebird.all(feedStories)
+        .then(data => {
+          // sort stories by reverse chron
+          sortedFeed = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          res.send(sortedFeed);
+        });
     });
 }
 
