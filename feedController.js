@@ -32,18 +32,18 @@ analyzeArticle = (item) => {
       const entities = results[0].entities;
 
       relevantEntity = (obj) => {
-        if (obj.salience > 0.15) return true;
+        return obj.salience > 0.15
       }
 
       getEntities = (obj) => {
         return obj.name
       }
+
       const relevant = entities.filter(entity => {
-        if (relevantEntity(entity)) {
-          // console.log(entity.name);
-          return entity.name;
-        }
+        if (relevantEntity(entity)) return true;
       });
+
+      console.log(relevant);
 
       const topics = relevant.map(getEntities);
 
