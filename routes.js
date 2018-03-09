@@ -32,7 +32,6 @@ router.get(
 
 router.post(
   '/api/posts',
-  postController.analyzeEntities,
   postController.savePost
 );
 

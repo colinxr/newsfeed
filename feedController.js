@@ -1,9 +1,9 @@
 const feedParser = require('feedparser-promised');
 const Bluebird   = require('bluebird');
 const language   = require('@google-cloud/language');
+const routes     = require('express').Router();
 const feeds      = require('./feeds').feeds;
 const Entry      = require('./models/Entry');
-const routes     = require('express').Router();
 
 const client     = new language.LanguageServiceClient()
 
@@ -16,7 +16,6 @@ getCategories = (req, res) => {
 }
 
 analyzeArticle = (item) => {
-  console.log('analyzing post');
   const title = item.title;
   const stripTags = item.summary.replace(/(<([^>]+)>)/ig,"");
   const desc = stripTags;
@@ -27,23 +26,18 @@ analyzeArticle = (item) => {
     type: 'PLAIN_TEXT',
   };
 
-  const topics = [];
-
-  client.analyzeEntities({ document })
+  return client
+    .analyzeEntities({ document })
     .then(results => {
       const entities = results[0].entities;
-      entities.forEach(entity => {
-        // console.log(entity.name);
-        // console.log(` - Type: ${entity.type}, Salience: ${entity.salience}`);
-        // if (entity.metadata && entity.metadata.wikipedia_url) {
-          // console.log(` - Wikipedia URL: ${entity.metadata.wikipedia_url}$`);
-        // }
+
+      topics = entities.filter(entity => {
         if (entity.salience > 0.15) {
-          topics.push(entity.name);
+          return entity.name;
         }
       });
-      item.newsMeta.entities = topics;
 
+      item.newsMeta.entities = topics;
       return item;
     })
    .catch(err => {
@@ -52,14 +46,21 @@ analyzeArticle = (item) => {
    });
 }
 
-parseFeed = (feed) => {
-  let articles = [];
+filterByDate = (item) => {
+  const now = Date.now()
+  const pubDate = Date.parse(item[`rss:pubdate`][`#`]);
 
+  if (((now - pubDate) / 1000) > 86400) {
+    item.newsMeta = {};
+    return item;
+  }
+}
+
+parseFeed = (feed) => {
   const httpConfig = {
     uri: feed,
     gzip: true,
   }
-
   const fpConfig = {
     feedurl: feed,
     addmeta: true,
@@ -68,20 +69,8 @@ parseFeed = (feed) => {
 
   return feedParser.parse(httpConfig, fpConfig)
     .then(items => {
-      let articles = [];
-      items.map(item => {
-        // asign newsfeed score
-        const now = Date.now() / 1000
-        const pubDate = Date.parse(item[`rss:pubdate`][`#`]) / 1000;
-
-        // Only show posts from last 24 hours in admin backend feed
-        if ((now - pubDate) > 86400) {
-          item.newsMeta = {};
-          // console.dir(item);
-          analyzeArticle(item);
-          articles.push(item);
-        }
-      });
+      // filter items by last 24 hours.
+      const articles = items.filter(filterByDate);
 
       return articles;
     })
@@ -100,13 +89,20 @@ adminFeed = async (req, res) => {
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
-    .then(resp => {
-      console.log(typeof(resp));
-      stories = []
-        .concat(...resp) // flatten resp into on array of objects
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // sort stories by reverse chron
-        console.dir(stories[0], {depth: null, colors: true});
-      res.send(stories);
+    .then(data => {
+      stories = [].concat(...data) // flatten resp into on array of objects
+      return stories;
+    })
+    .then(stories => {
+      const feedStories = stories.map(story => analyzeArticle(story));
+
+      Bluebird.all(feedStories)
+        .then(data => {
+          // sort stories by reverse chron
+          sortedFeed = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          console.dir(sortedFeed[0], {depth: null, colors: true});
+          res.send(sortedFeed);
+        });
     });
 }
 
@@ -147,6 +143,7 @@ singleFeed = (req, res) => {
 module.exports = {
   getCategories,
   parseFeed,
+  filterByDate,
   analyzeArticle,
   adminFeed,
   categoryFeed,
