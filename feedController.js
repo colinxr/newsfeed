@@ -31,13 +31,24 @@ analyzeArticle = (item) => {
     .then(results => {
       const entities = results[0].entities;
 
-      topics = entities.filter(entity => {
-        if (entity.salience > 0.15) {
+      relevantEntity = (obj) => {
+        if (obj.salience > 0.15) return true;
+      }
+
+      getEntities = (obj) => {
+        return obj.name
+      }
+      const relevant = entities.filter(entity => {
+        if (relevantEntity(entity)) {
+          // console.log(entity.name);
           return entity.name;
         }
       });
 
+      const topics = relevant.map(getEntities);
+
       item.newsMeta.entities = topics;
+
       return item;
     })
    .catch(err => {
@@ -137,7 +148,6 @@ categoryFeed = async (req, res) => {
 }
 
 singleFeed = (req, res) => {
-  // set the param variables
   const { cat, id } = req.params;
 
   // set the feed url
