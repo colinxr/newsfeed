@@ -17,8 +17,7 @@ getCategories = (req, res) => {
 
 analyzeArticle = (item) => {
   const title = item.title;
-  const stripTags = item.summary.replace(/(<([^>]+)>)/ig,"");
-  const desc = stripTags;
+  const desc = item.summary.replace(/(<([^>]+)>)/ig,"");
 
   const text = `${title}. ${desc}`;
   const document = {
@@ -29,39 +28,25 @@ analyzeArticle = (item) => {
   return client
     .analyzeEntities({ document })
     .then(results => {
-      const entities = results[0].entities;
-
       relevantEntity = (obj) => {
-        return obj.salience > 0.15
+        return obj.salience > 0.15;
       }
 
-      getEntities = (obj) => {
-        return obj.name
-      }
-
-      const relevant = entities.filter(entity => {
-        if (relevantEntity(entity)) return true;
-      });
-
-      console.log(relevant);
-
-      const topics = relevant.map(getEntities);
-
+      const entities = results[0].entities;
+      const relevant = entities.filter(relevantEntity);
+      const topics = relevant.map(topic => topic.name); // only use names of the entities
       item.newsMeta.entities = topics;
 
       return item;
     })
-   .catch(err => {
-     console.error('ERROR:', err);
-     res.status(500).send(err.message);
-   });
+   .catch(err => res.status(500).send(err.message));
 }
 
 filterByDate = (item) => {
-  const now = Date.now()
-  const pubDate = Date.parse(item[`rss:pubdate`][`#`]);
+  const now = Date.now() / 1000;
+  const pubDate = Date.parse(item[`rss:pubdate`][`#`]) / 1000;
 
-  if (((now - pubDate) / 1000) > 86400) {
+  if ((now - pubDate) > 86400) {
     item.newsMeta = {};
     return item;
   }
@@ -80,9 +65,7 @@ parseFeed = (feed) => {
 
   return feedParser.parse(httpConfig, fpConfig)
     .then(items => {
-      // filter items by last 24 hours.
-      const articles = items.filter(filterByDate);
-
+      const articles = items.filter(item => filterByDate(item)); // filter items by last 24 hours.
       return articles;
     })
     .catch(err => console.log('Error: ' + err));
@@ -105,14 +88,14 @@ adminFeed = async (req, res) => {
       return stories;
     })
     .then(stories => {
-      const feedStories = stories.map(story => analyzeArticle(story));
+      stories = stories.map(story => analyzeArticle(story));
 
-      Bluebird.all(feedStories)
+      Bluebird.all(stories)
         .then(data => {
           // sort stories by reverse chron
-          sortedFeed = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          console.dir(sortedFeed[0], {depth: null, colors: true});
-          res.send(sortedFeed);
+          // const sortedFeed = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          // console.dir(sortedFeed[0], {depth: null, colors: true});
+          res.send(data);
         });
     });
 }
