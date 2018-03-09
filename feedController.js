@@ -1,8 +1,11 @@
 const feedParser = require('feedparser-promised');
 const Bluebird   = require('bluebird');
+const language   = require('@google-cloud/language');
 const feeds      = require('./feeds').feeds;
 const Entry      = require('./models/Entry');
 const routes     = require('express').Router();
+
+const client     = new language.LanguageServiceClient()
 
 getCategories = (req, res) => {
   const feedCats = Object
@@ -10,6 +13,43 @@ getCategories = (req, res) => {
     .map(key => key);
 
   res.send(feedCats);
+}
+
+analyzeArticle = (item) => {
+  console.log('analyzing post');
+  const title = item.title;
+  const stripTags = item.summary.replace(/(<([^>]+)>)/ig,"");
+  const desc = stripTags;
+
+  const text = `${title}. ${desc}`;
+  const document = {
+    content: text,
+    type: 'PLAIN_TEXT',
+  };
+
+  const topics = [];
+
+  client.analyzeEntities({ document })
+    .then(results => {
+      const entities = results[0].entities;
+      entities.forEach(entity => {
+        // console.log(entity.name);
+        // console.log(` - Type: ${entity.type}, Salience: ${entity.salience}`);
+        // if (entity.metadata && entity.metadata.wikipedia_url) {
+          // console.log(` - Wikipedia URL: ${entity.metadata.wikipedia_url}$`);
+        // }
+        if (entity.salience > 0.15) {
+          topics.push(entity.name);
+        }
+      });
+      item.newsMeta.entities = topics;
+
+      return item;
+    })
+   .catch(err => {
+     console.error('ERROR:', err);
+     res.status(500).send(err.message);
+   });
 }
 
 parseFeed = (feed) => {
@@ -22,7 +62,7 @@ parseFeed = (feed) => {
 
   const fpConfig = {
     feedurl: feed,
-    addmeta: false,
+    addmeta: true,
     normalize: true
   }
 
@@ -36,9 +76,9 @@ parseFeed = (feed) => {
 
         // Only show posts from last 24 hours in admin backend feed
         if ((now - pubDate) > 86400) {
-          item.newsMeta = {
-
-          };
+          item.newsMeta = {};
+          // console.dir(item);
+          analyzeArticle(item);
           articles.push(item);
         }
       });
@@ -54,8 +94,10 @@ adminFeed = async (req, res) => {
     .keys(feeds)
     .map(key => Object.values(feeds[key]))
     .reduce((a,b) => a.concat(b));
+
   // parse the indivdual urls and hold them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
+
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
     .then(resp => {
@@ -71,10 +113,12 @@ adminFeed = async (req, res) => {
 categoryFeed = async (req, res) => {
   // get the category
   const cat = req.params.category;
+
   // get the urls from that particular category in Feeds Object
   const feedUrls = Object
     .keys(feeds[cat])
     .map(key => feeds[cat][key]);
+
   // parses the indivdual urls and holds them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
 
@@ -91,8 +135,10 @@ categoryFeed = async (req, res) => {
 singleFeed = (req, res) => {
   // set the param variables
   const { cat, id } = req.params;
+
   // set the feed url
   const feedUrl = feeds.toronto[id];
+
   // parse feed then send results
   parseFeed(feedUrl)
     .then(resp => res.send(resp));
@@ -101,6 +147,7 @@ singleFeed = (req, res) => {
 module.exports = {
   getCategories,
   parseFeed,
+  analyzeArticle,
   adminFeed,
   categoryFeed,
   singleFeed
