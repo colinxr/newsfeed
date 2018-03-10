@@ -97,6 +97,7 @@ adminFeed = async (req, res) => {
           // sort stories by reverse chron
           reverseChron = (arr, date) => {
             return arr.slice().sort((a, b) => {
+              console.log(a['meta']['title']);
               return a[date] < b[date] ? 1 : -1;
             });
           }
@@ -129,15 +130,26 @@ categoryFeed = async (req, res) => {
       return stories;
     })
     .then(stories => {
-      const feedStories = stories.map(story => analyzeArticle(story));
+      stories = stories.map(story => analyzeArticle(story));
 
-      Bluebird.all(feedStories)
+      Bluebird.all(stories)
         .then(data => {
+          const date = [`pubdate`];
           // sort stories by reverse chron
-          sortedFeed = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          reverseChron = (arr, date) => {
+            return arr.slice().sort((a, b) => {
+              console.log(a['meta']['title']);
+              return a[date] < b[date] ? 1 : -1;
+            });
+          }
+          const sortedFeed = reverseChron(data, date);
+          // const last = sortedFeed.length - 1;
+          // console.dir(sortedFeed[last], {depth: null, colors: true});
           res.send(sortedFeed);
-        });
-    });
+        })
+        .catch(err => res.status(500).send(err.message));
+    })
+    .catch(err => res.status(500).send(err.message));
 }
 
 singleFeed = (req, res) => {
