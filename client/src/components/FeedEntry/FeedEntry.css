@@ -36,6 +36,18 @@ p {
   line-height: 18pt;
 }
 
+.header__meta__topics {
+  margin-top: 5px;
+  padding-left: 0
+}
+
+li { display: inline-block; }
+
+li p {
+  font-size: 10pt;
+  margin: 0
+}
+
 .feed-entry__action-bar__save {
   color: #999;
   cursor: pointer;

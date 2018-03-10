@@ -24,8 +24,6 @@ class ArticleList extends Component {
     // change this no promise
     Promise.all([this.getAllArticles()])
       .then((articles) => {
-        console.log(articles[0].data[0].newsMeta);
-
         this.setState({
           isLoading: false,
           articles: articles[0].data
@@ -72,6 +70,7 @@ class ArticleList extends Component {
 
   // getPosts = () => { return axios.get('api/posts'); }
   getAllArticles = () => { return axios.get('/api/feeds'); }
+  
   getCatArticles = (cat) => { return axios.get(`/api/feeds/${cat}`); }
 
   render() {

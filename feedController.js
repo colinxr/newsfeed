@@ -30,7 +30,7 @@ analyzeArticle = (item) => {
     .then(results => {
 
       relevantEntity = (obj) => {
-        return obj.salience > 0.15;
+        return obj.salience > 0.12;
       }
 
       const entities = results[0].entities;
@@ -97,7 +97,6 @@ adminFeed = async (req, res) => {
           // sort stories by reverse chron
           reverseChron = (arr, date) => {
             return arr.slice().sort((a, b) => {
-              console.log(a[date] + ' + ' + a[`meta`][`title`]);
               return a[date] < b[date] ? 1 : -1;
             });
           }

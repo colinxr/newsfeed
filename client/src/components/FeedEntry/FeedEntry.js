@@ -13,6 +13,7 @@ class FeedEntry extends Component {
     this.apiPost = this.apiPost.bind(this);
     this.getImgUrl = this.getImgUrl.bind(this);
     this.decodeHtmlEntity = this.decodeHtmlEntity.bind(this);
+    this.renderEntities = this.renderEntities.bind(this);
   }
 
   handleClick(e) {
@@ -31,6 +32,7 @@ class FeedEntry extends Component {
       originalTitle: article.title,
       title: article.title,
       source: article.meta.title,
+      entities: article.newsMeta.entities,
       url: article.link,
       urlToImage: articleImg
     }
@@ -84,6 +86,19 @@ class FeedEntry extends Component {
       return String.fromCharCode(dec);
     });
   }
+  
+  renderEntities() {
+    const entities = this.props.articleInfo.newsMeta.entities;
+    
+    return(
+      <ul className="header__meta__topics">{
+          entities.map(item => 
+            <li><p>{item}</p></li>
+          )
+        }</ul>
+    )
+    
+  }
 
   render() {
     const article = this.props.articleInfo;
@@ -104,13 +119,13 @@ class FeedEntry extends Component {
           location="ArticleList"
           url={articleImg}
         />
-        {/*<div className="feed-entry__img-wrap">
-          <a href={article['rss:link']['#']} className="feed-entry__title-link"><img src={article.urlToImage} alt="" className="feed-entry__img" /></a>
-        </div>*/}
         <div className="feed-entry__body">
           <header>
             <h2 className="feed-entry__title article-title"><a href={article.link} className="feed-entry__title-link" target="_blank">{article.title}</a></h2>
-            <h4>{article.meta.title}</h4>
+            <div className="header__meta">
+              <h4>{article.meta.title}</h4>
+              {this.renderEntities()}
+            </div>
           </header>
         <div className="feed-entry__description">
           <p>{desc}</p>
