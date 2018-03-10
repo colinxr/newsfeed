@@ -92,8 +92,8 @@ class FeedEntry extends Component {
     
     return(
       <ul className="header__meta__topics">{
-          entities.map(item => 
-            <li><p>{item}</p></li>
+          entities.map((item, i) => 
+            <li key={i}><p>{item}</p></li>
           )
         }</ul>
     )

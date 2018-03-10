@@ -10,8 +10,6 @@ getPosts = (req, res) => {
 }
 
 savePost = (req, res) => {
-  console.log('saving');
-  console.log(req.body.entities);
   const newEntry = new Entry(req.body);
   newEntry.save()
     .then(entry => {

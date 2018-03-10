@@ -48,3 +48,14 @@ textarea {
   font-size: 12pt;
   line-height: 18pt;
 }
+
+#article-entities {
+  padding-left: 0;
+}
+
+li { display: inline-block; }
+
+li p {
+  font-size: 10pt;
+  margin: 0
+}

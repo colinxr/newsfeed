@@ -104,8 +104,10 @@ adminFeed = async (req, res) => {
           // const last = sortedFeed.length - 1;
           // console.dir(sortedFeed[last], {depth: null, colors: true});
           res.send(sortedFeed);
-        });
-    });
+        })
+        .catch(err => res.status(500).send(err.message));
+    })
+    .catch(err => res.status(500).send(err.message));
 }
 
 categoryFeed = async (req, res) => {

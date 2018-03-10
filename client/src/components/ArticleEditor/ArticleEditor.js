@@ -16,15 +16,16 @@ class ArticleEditor extends Component {
       message: null
     }
 
-    this.handleTitle = this.handleTitle.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleSave = this.handleSave.bind(this);
-    this.handlePublish = this.handlePublish.bind(this);
-    this.renderStatic = this.renderStatic.bind(this);
-    this.renderForm = this.renderForm.bind(this);
-    this.renderButton = this.renderButton.bind(this);
-    this.renderMessage = this.renderMessage.bind(this);
-    this.apiPost = this.apiPost.bind(this);
+    // this.handleTitle    = this.handleTitle.bind(this);
+    this.handleEdit     = this.handleEdit.bind(this);
+    this.handleSave     = this.handleSave.bind(this);
+    this.handlePublish  = this.handlePublish.bind(this);
+    this.renderEntities = this.renderEntities.bind(this);
+    this.renderStatic   = this.renderStatic.bind(this);
+    this.renderForm     = this.renderForm.bind(this);
+    this.renderButton   = this.renderButton.bind(this);
+    this.renderMessage  = this.renderMessage.bind(this);
+    this.apiPost        = this.apiPost.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,12 +37,12 @@ class ArticleEditor extends Component {
     }
   }
 
-  handleTitle = (e) => {
-    e.preventDefault();
-    this.setState({
-      post: { title: e.target.value }
-    });
-  }
+  // handleTitle = (e) => {
+  //   e.preventDefault();
+  //   this.setState({
+  //     post: { title: e.target.value }
+  //   });
+  // }
 
   handleEdit = (e) => {
     e.preventDefault();
@@ -55,9 +56,12 @@ class ArticleEditor extends Component {
 
     const post = {...this.state.post};
 
-    post.title = this.formTitle.value;
-    post.source = this.formSource.value;
+    post.title   = this.formTitle.value;
+    post.source  = this.formSource.value;
     post.excerpt = this.formExcerpt.value;
+    
+    const entitiesArray = this.formEntities.value.split(',');
+    post.entities = entitiesArray;
 
     this.setState({
       post: post,
@@ -94,6 +98,7 @@ class ArticleEditor extends Component {
           <h3 id="article-title">{post.title}</h3>
           <h4 id="article-source">{post.source}</h4>
           <p id="article-description">{post.excerpt}</p>
+          {this.renderEntities()}
         </div>
         {this.renderButton()}
       </div>
@@ -105,9 +110,10 @@ class ArticleEditor extends Component {
     return (
       <div>
         <form className="editor__form" onSubmit={(e) => this.submitForm(e)}>
-          <textarea id="article-title" type="text" name="article-title" defaultValue={post.originalTitle} onChange={(e) => this.handleTitle(e)} required autoComplete="off" ref={(title) => {this.formTitle = title}}></textarea>
+          <textarea id="article-title" type="text" name="article-title" defaultValue={post.originalTitle} required autoComplete="off" ref={(title) => {this.formTitle = title}}></textarea>
           <input id="article-source" type="text" name="article-source" defaultValue={post.source} required autoComplete="off" ref={(source) => {this.formSource = source}}  />
           <textarea id="article-description" type="text" name="article-description" defaultValue={post.excerpt} required autoComplete="off" ref={(desc) => {this.formExcerpt = desc}}></textarea>
+          {this.renderEntities()}
         </form>
         {this.renderButton()}
       </div>
@@ -122,6 +128,24 @@ class ArticleEditor extends Component {
     } else {
       return (
         <button className="editor__button" onClick={(e) => {this.handleSave(e)}} type="submit">Save Post</button>
+      )
+    }
+  }
+  
+  renderEntities() {
+    const entities = this.state.post.entities;
+    
+    if (!this.state.editing){
+      return(
+        <ul id="article-entities">{
+          entities.map((item, i) => <li key={i}><p>{item}</p></li>)
+          }
+        </ul>
+      )
+    } else {
+      const editEntities = entities.join(', ');
+      return(
+        <input id="article-entities" type="text" name="article-entities" defaultValue={editEntities} ref={(entities) => this.formEntities = entities} />
       )
     }
   }
