@@ -44,10 +44,10 @@ analyzeArticle = (item) => {
 }
 
 filterByDate = (item) => {
-  const now = Date.now() / 1000;
-  const pubDate = Date.parse(item[`rss:pubdate`][`#`]) / 1000;
+  const now = Date.now();
+  const pubDate = Date.parse(item[`pubdate`]);
 
-  if ((now - pubDate) > 86400) {
+  if ((now - pubDate) < 86400000) {
     item.newsMeta = {};
     return item;
   }
@@ -97,12 +97,13 @@ adminFeed = async (req, res) => {
           // sort stories by reverse chron
           reverseChron = (arr, date) => {
             return arr.slice().sort((a, b) => {
-              return a[date] > b[date] ? -1 : 1;
+              console.log(a[date] + ' + ' + a[`meta`][`title`]);
+              return a[date] < b[date] ? 1 : -1;
             });
           }
           const sortedFeed = reverseChron(data, date);
-
-          console.dir(sortedFeed[0], {depth: null, colors: true});
+          // const last = sortedFeed.length - 1;
+          // console.dir(sortedFeed[last], {depth: null, colors: true});
           res.send(sortedFeed);
         });
     });
