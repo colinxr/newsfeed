@@ -28,6 +28,7 @@ analyzeArticle = (item) => {
   return client
     .analyzeEntities({ document })
     .then(results => {
+
       relevantEntity = (obj) => {
         return obj.salience > 0.15;
       }
@@ -92,10 +93,17 @@ adminFeed = async (req, res) => {
 
       Bluebird.all(stories)
         .then(data => {
+          const date = [`pubdate`];
           // sort stories by reverse chron
-          // const sortedFeed = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          // console.dir(sortedFeed[0], {depth: null, colors: true});
-          res.send(data);
+          reverseChron = (arr, date) => {
+            return arr.slice().sort((a, b) => {
+              return a[date] > b[date] ? -1 : 1;
+            });
+          }
+          const sortedFeed = reverseChron(data, date);
+
+          console.dir(sortedFeed[0], {depth: null, colors: true});
+          res.send(sortedFeed);
         });
     });
 }
