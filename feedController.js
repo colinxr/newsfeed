@@ -72,7 +72,7 @@ parseFeed = (feed) => {
     .catch(err => console.log('Error: ' + err));
 }
 
-adminFeed = async (req, res) => {
+adminFeed = (req, res) => {
   // take feeds object and pull out all of the individual properties
   const feedUrls = Object
     .keys(feeds)
@@ -92,16 +92,15 @@ adminFeed = async (req, res) => {
       stories = stories.map(story => analyzeArticle(story));
 
       Bluebird.all(stories)
-        .then(data => {
+        .then(resp => {
           const date = [`pubdate`];
           // sort stories by reverse chron
           reverseChron = (arr, date) => {
             return arr.slice().sort((a, b) => {
-              console.log(a['meta']['title']);
               return a[date] < b[date] ? 1 : -1;
             });
           }
-          const sortedFeed = reverseChron(data, date);
+          const sortedFeed = reverseChron(resp, date);
           // const last = sortedFeed.length - 1;
           // console.dir(sortedFeed[last], {depth: null, colors: true});
           res.send(sortedFeed);
@@ -111,18 +110,15 @@ adminFeed = async (req, res) => {
     .catch(err => res.status(500).send(err.message));
 }
 
-categoryFeed = async (req, res) => {
+categoryFeed = (req, res) => {
   // get the category
   const cat = req.params.category;
-
   // get the urls from that particular category in Feeds Object
   const feedUrls = Object
     .keys(feeds[cat])
     .map(key => feeds[cat][key]);
-
   // parses the indivdual urls and holds them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
-
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
     .then(data => {
@@ -154,10 +150,8 @@ categoryFeed = async (req, res) => {
 
 singleFeed = (req, res) => {
   const { cat, id } = req.params;
-
   // set the feed url
   const feedUrl = feeds.toronto[id];
-
   // parse feed then send results
   parseFeed(feedUrl)
     .then(resp => res.send(resp));
