@@ -30,6 +30,11 @@ router.get(
   postController.getPosts
 );
 
+router.get(
+  '/api/posts/:tag',
+  postController.getPostsByTag
+);
+
 router.post(
   '/api/posts',
   postController.savePost
