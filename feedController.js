@@ -15,7 +15,7 @@ getCategories = (req, res) => {
   res.send(feedCats);
 }
 
-analyzeEntities = (item) => {
+analyzeContent = (item) => {
   const title = item.title;
   const desc = item.summary.replace(/(<([^>]+)>)/ig,"");
 
@@ -89,7 +89,7 @@ adminFeed = (req, res) => {
       return stories;
     })
     .then(stories => {
-      stories = stories.map(story => analyzeEntities(story));
+      stories = stories.map(story => analyzeContent(story));
 
       Bluebird.all(stories)
         .then(resp => {
@@ -126,7 +126,7 @@ categoryFeed = (req, res) => {
       return stories;
     })
     .then(stories => {
-      stories = stories.map(story => analyzeEntities(story));
+      stories = stories.map(story => analyzeContent(story));
 
       Bluebird.all(stories)
         .then(data => {
@@ -161,7 +161,7 @@ module.exports = {
   getCategories,
   parseFeed,
   filterByDate,
-  analyzeEntities,
+  analyzeContent,
   adminFeed,
   categoryFeed,
   singleFeed
