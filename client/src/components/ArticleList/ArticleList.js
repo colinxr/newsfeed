@@ -22,11 +22,12 @@ class ArticleList extends Component {
 
   componentDidMount() {
     // change this no promise
-    Promise.all([this.getAllArticles()])
+    // Promise.all([this.getAllArticles()])
+    this.getAllArticles()
       .then((articles) => {
         this.setState({
           isLoading: false,
-          articles: articles[0].data
+          articles: articles.data
         });
       })
       .catch(err => {
@@ -45,7 +46,7 @@ class ArticleList extends Component {
       });
 
       if (nextProps.category === 'all') {
-        Promise.all([this.getAllArticles()])
+        this.getAllArticles()
           .then(articles => {
             this.setState({
               isLoading: false,
@@ -54,24 +55,37 @@ class ArticleList extends Component {
             return;
           })
       } else {
-      //change this, no promise
-      Promise.all([this.getCatArticles(nextProps.category)])
-        .then(articles => {
-          this.setState({
-            isLoading: false,
-            articles: articles[0].data });
-        })
-        .catch(err => {
-          this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
-        });
+        this.getCatArticles(nextProps.category)
+          .then(articles => {
+            this.setState({
+              isLoading: false,
+              articles: articles.data });
+          })
+          .catch(err => {
+            this.setState({ errMessage: 'There\'s been an error with the Server, please try again.' });
+          });
       }
     }
   }
 
   // getPosts = () => { return axios.get('api/posts'); }
-  getAllArticles = () => { return axios.get('/api/feeds'); }
-  
-  getCatArticles = (cat) => { return axios.get(`/api/feeds/${cat}`); }
+  // getAllArticles = () => { return  axios.get('/api/feeds'); }
+
+  getAllArticles = () => {
+    return new Promise((resolve, reject) => {
+      axios.get('/api/feeds')
+      .then(resp => resolve(resp))
+      .catch(err => reject(err));
+  });
+}
+
+  getCatArticles = (cat) => {
+    return new Promise((resolve, reject) => {
+      axios.get(`/api/feeds/${cat}`)
+        .then(resp => resolve(resp))
+        .catch(err => reject(err));
+    });
+  }
 
   render() {
     const { isLoading, errMessage, articles } = this.state;
