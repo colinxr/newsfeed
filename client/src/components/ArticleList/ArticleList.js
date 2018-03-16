@@ -21,8 +21,6 @@ class ArticleList extends Component {
   }
 
   componentDidMount() {
-    // change this no promise
-    // Promise.all([this.getAllArticles()])
     this.getAllArticles()
       .then((articles) => {
         this.setState({
@@ -39,7 +37,6 @@ class ArticleList extends Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.category !== this.props.category) {
-      console.log(nextProps.category)
       this.setState({
         isLoading: true,
         articles: {}
@@ -50,7 +47,7 @@ class ArticleList extends Component {
           .then(articles => {
             this.setState({
               isLoading: false,
-              articles: articles[0].data
+              articles: articles.data
             });
             return;
           })
@@ -67,9 +64,6 @@ class ArticleList extends Component {
       }
     }
   }
-
-  // getPosts = () => { return axios.get('api/posts'); }
-  // getAllArticles = () => { return  axios.get('/api/feeds'); }
 
   getAllArticles = () => {
     return new Promise((resolve, reject) => {
