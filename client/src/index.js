@@ -5,6 +5,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import './index.css';
 import RegisterPage from './components/RegisterPage/RegisterPage';
 import FrontPage from './components/FrontPage/FrontPage';
+import FrontPage from './components/StoriesPage/StoriesPage';
 import Admin from './components/Admin/Admin';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -13,6 +14,7 @@ const Root = () => {
     <BrowserRouter>
       <div>
         <Route exact path="/" component={FrontPage} />
+        <Route exact path="/stories/:tag" component={StoriesPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/admin" component={Admin} />
       </div>

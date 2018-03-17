@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import './Post.css';
 import Thumbnail from '../Thumbnail/Thumbnail';
+import TagList from '../TagList/TagList';
 
 class Post extends Component {
   constructor() {
@@ -29,7 +30,7 @@ class Post extends Component {
       message: response.data.message
     });
   }
-
+  
   render() {
     const post = this.props.postInfo;
 
@@ -47,6 +48,9 @@ class Post extends Component {
         </header>
         <div className="post-entry__description">
           <p>{post.description}</p>
+          <TagList 
+            tags={post.entities} 
+          />
         </div>
         <div className="post-entry__action-bar">
           <span className="post-entry__action-bar__delete" onClick={(e) => this.handleDelete(e)}>Delete Story</span>
