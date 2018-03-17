@@ -5,7 +5,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import './index.css';
 import RegisterPage from './components/RegisterPage/RegisterPage';
 import FrontPage from './components/FrontPage/FrontPage';
-import FrontPage from './components/StoriesPage/StoriesPage';
+import StoriesPage from './components/StoriesPage/StoriesPage';
 import Admin from './components/Admin/Admin';
 import registerServiceWorker from './registerServiceWorker';
 

@@ -45,12 +45,10 @@ class Post extends Component {
           />
           <h4>{post.source}</h4>
           <h2 className="post-entry__title post-title"><a href={post.url} className="post-entry__title-link">{post.title}</a></h2>
+          <TagList tags={post.entities} />
         </header>
         <div className="post-entry__description">
           <p>{post.description}</p>
-          <TagList 
-            tags={post.entities} 
-          />
         </div>
         <div className="post-entry__action-bar">
           <span className="post-entry__action-bar__delete" onClick={(e) => this.handleDelete(e)}>Delete Story</span>

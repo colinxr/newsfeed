@@ -1,33 +1,45 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 
-import './FrontPage.css';
-
-import FeaturedPost from '../FeaturedPost/FeaturedPost';
+import './StoriesPage.css';
 import Post from '../Post/Post';
 
-class FrontPage extends React.Component {
+class StoriesPage extends Component {
   constructor() {
     super();
 
     this.state = {
-      posts: [],
+      tag: '',
+      tagName: '',
+      posts: []
     }
 
-    this.callApi = this.callApi.bind(this);
+    this.getPostsByTag = this.getPostsByTag.bind(this);
     this.removePost = this.removePost.bind(this);
   }
 
   componentDidMount() {
-    this.callApi()
+    const loc = this.props.location.pathname
+    const tag = loc.substr(loc.lastIndexOf('/') + 1);
+    const tagName = tag
+      .split('-')
+      .map(el => el = el.charAt(0).toUpperCase() + el.substr(1))
+      .join(' ');
+    
+    this.setState({ 
+      tag,
+      tagName
+    });
+    
+    this.getPostsByTag(tag)
       .then(resp => {
         this.setState({ posts: resp });
       })
       .catch(err => console.log(err));
   }
 
-  callApi = async () => {
-    const response = await axios({'/api/posts/' + this.props.tag});
+  getPostsByTag = async (tag) => {
+    const response = await axios(`/api/posts/${tag}`);
     const body = await response.data;
     if (response.status !== 200) throw Error(body.message);
     return body;
@@ -49,12 +61,14 @@ class FrontPage extends React.Component {
 
   render() {
     const posts = this.state.posts;
+    console.log(this.props.location);
 
     return (
       <div>
-        <h2><a href="/admin">This is A1</a></h2>
+        <h1><a href="/">This is A1</a></h1>
         <h4>Because you shouldn't get your news from Facebook</h4>
         <div className="wrapper wrapper--stories-page">
+          <h2>{this.state.tagName}</h2>
           <div className="wrapper--stories__posts">
             {
               Object
@@ -70,4 +84,4 @@ class FrontPage extends React.Component {
   }
 }
 
-export default FrontPage;
+export default StoriesPage;

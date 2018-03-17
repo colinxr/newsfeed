@@ -60,7 +60,7 @@ class ArticleEditor extends Component {
     post.source  = this.formSource.value;
     post.excerpt = this.formExcerpt.value;
     
-    const entitiesArray = this.formEntities.value.split(',');
+    const entitiesArray = this.formEntities.value.split(',').map(el => el.trim());
     post.entities = entitiesArray;
 
     this.setState({
