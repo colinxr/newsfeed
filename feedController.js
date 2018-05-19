@@ -28,7 +28,6 @@ analyzeContent = (item) => {
   return client
     .analyzeEntities({ document })
     .then(results => {
-
       relevantEntity = (obj) => {
         return obj.salience > 0.12;
       }
@@ -74,10 +73,11 @@ parseFeed = (feed) => {
 
 adminFeed = (req, res) => {
   // take feeds object and pull out all of the individual properties
-  const feedUrls = Object
+  const feedList = Object
     .keys(feeds)
-    .map(key => Object.values(feeds[key]))
-    .reduce((a,b) => a.concat(b));
+    .map(key => Object.keys(feeds[key]).map(k => feeds[key][k]));
+
+	const feedUrls = [].concat.apply([], feedList);
 
   // parse the indivdual urls and hold them in this variable
   const promises = feedUrls.map(feed => parseFeed(feed));
@@ -89,8 +89,7 @@ adminFeed = (req, res) => {
       return stories;
     })
     .then(stories => {
-      stories = stories.map(story => analyzeContent(story));
-
+      // stories = stories.map(story => analyzeContent(story));
       Bluebird.all(stories)
         .then(resp => {
           const date = [`pubdate`];

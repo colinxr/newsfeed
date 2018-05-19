@@ -2,13 +2,8 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": {
-    "/api/*": {
-      "target": "http://159.89.126.3:3001",
-      "changeOrigin": true
-    }
-  },
-  "homepage": "https://colinrabyniuk.com/newsfeed/",
+  "proxy": "http://localhost:3001/",
+	"homepage": "http://www.colinrabyniuk.com/newsfeed",
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "concurrently": "3.0.0",
