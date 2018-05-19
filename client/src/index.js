@@ -7,11 +7,10 @@ import RegisterPage from './components/RegisterPage/RegisterPage';
 import FrontPage from './components/FrontPage/FrontPage';
 import StoriesPage from './components/StoriesPage/StoriesPage';
 import Admin from './components/Admin/Admin';
-import registerServiceWorker from './registerServiceWorker';
 
 const Root = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/newsfeed">
       <div>
         <Route exact path="/" component={FrontPage} />
         <Route exact path="/stories/:tag" component={StoriesPage} />
@@ -23,4 +22,3 @@ const Root = () => {
 }
 
 ReactDOM.render(<Root />, document.getElementById('root'));
-registerServiceWorker();

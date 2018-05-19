@@ -25,12 +25,12 @@ class StoriesPage extends Component {
       .split('-')
       .map(el => el = el.charAt(0).toUpperCase() + el.substr(1))
       .join(' ');
-    
-    this.setState({ 
+
+    this.setState({
       tag,
       tagName
     });
-    
+
     this.getPostsByTag(tag)
       .then(resp => {
         this.setState({ posts: resp });
@@ -39,7 +39,7 @@ class StoriesPage extends Component {
   }
 
   getPostsByTag = async (tag) => {
-    const response = await axios(`/api/posts/${tag}`);
+    const response = await axios(`${process.env.REACT_APP_API_URL}/api/posts/${tag}`);
     const body = await response.data;
     if (response.status !== 200) throw Error(body.message);
     return body;

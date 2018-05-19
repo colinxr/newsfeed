@@ -13,14 +13,14 @@ class FeedEntry extends Component {
     this.apiPost = this.apiPost.bind(this);
     this.getImgUrl = this.getImgUrl.bind(this);
     this.decodeHtmlEntity = this.decodeHtmlEntity.bind(this);
-    this.renderEntities = this.renderEntities.bind(this);
+    // this.renderEntities = this.renderEntities.bind(this);
   }
 
   handleClick(e) {
     e.preventDefault();
     const article = this.props.articleInfo;
 
-    const stripTags = article.description.replace(/(<([^>]+)>)/ig,"").trim();
+    const stripTags = article.description ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : '';
     const decode = this.decodeHtmlEntity(stripTags);
     const excerpt = decode.slice(0,250).trim() + '...';
     const articleImg = this.getImgUrl();
@@ -48,7 +48,7 @@ class FeedEntry extends Component {
   }
 
   apiPost = async (obj) => {
-    const response = await axios.post('/api/posts', obj);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`, obj);
     console.log(response);
     const body = await response.data;
 
@@ -56,58 +56,58 @@ class FeedEntry extends Component {
 
     return body;
   }
-  
+
   getImgUrl() {
     const article = this.props.articleInfo;
     let imgUrl;
-    
+
     if (article.image.url) {
       imgUrl = article.image.url;
       return imgUrl;
     }
-    
-    const imgInDesc = article.description.includes('<img src=');
+
+    const imgInDesc = article.description ? article.description.includes('<img src=') : false;
     if (imgInDesc) {
       const desc = article.description;
       const regex = /<img.*?src=['"](.*?)['"]/;
       const imgUrl = regex.exec(desc)[1];;
-      
+
       return imgUrl;
     }
-    
+
     if (article.enclosures.length) {
       let imgUrl = article.enclosures[0].url;
       return imgUrl;
     }
   }
-  
+
   decodeHtmlEntity(str) {
     return str.replace(/&#(\d+);/g, function(match, dec) {
       return String.fromCharCode(dec);
     });
   }
-  
-  renderEntities() {
-    const entities = this.props.articleInfo.newsMeta.entities;
-    
-    return(
-      <ul className="header__meta__topics">{
-          entities.map((item, i) => 
-            <li key={i}><p>{item}</p></li>
-          )
-        }</ul>
-    )
-    
-  }
+
+  // renderEntities() {
+  //   const entities = this.props.articleInfo.newsMeta.entities;
+  //
+  //   return(
+  //     <ul className="header__meta__topics">{
+  //         entities.map((item, i) =>
+  //           <li key={i}><p>{item}</p></li>
+  //         )
+  //       }</ul>
+  //   )
+  //
+  // }
 
   render() {
     const article = this.props.articleInfo;
-    const stripTags = article.description.replace(/(<([^>]+)>)/ig,"");
+    const stripTags = article.description ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : '';
     const decode = this.decodeHtmlEntity(stripTags);
     const desc = decode.slice(0,250).trim() + '...';
-    
+
     const articleImg = this.getImgUrl();
-    
+
     if (article.enclosures[0]) {
       const articleImg = article.enclosures[0];
     }
@@ -124,7 +124,7 @@ class FeedEntry extends Component {
             <h2 className="feed-entry__title article-title"><a href={article.link} className="feed-entry__title-link" target="_blank">{article.title}</a></h2>
             <div className="header__meta">
               <h4>{article.meta.title}</h4>
-              {this.renderEntities()}
+              {/*this.renderEntities()*/}
             </div>
           </header>
         <div className="feed-entry__description">

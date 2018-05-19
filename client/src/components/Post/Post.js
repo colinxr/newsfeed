@@ -21,7 +21,7 @@ class Post extends Component {
   }
 
   apiDelete = async(postID, e) => {
-    const response = await axios.delete(`/api/posts/${postID}`);
+    const response = await axios.delete(`http://159.89.126.3:3001/api/posts/${postID}`);
     const body = await response.data;
 
     if (response.status !== 200) throw Error(body.message);

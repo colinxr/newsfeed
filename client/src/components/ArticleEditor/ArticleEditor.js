@@ -20,7 +20,7 @@ class ArticleEditor extends Component {
     this.handleEdit     = this.handleEdit.bind(this);
     this.handleSave     = this.handleSave.bind(this);
     this.handlePublish  = this.handlePublish.bind(this);
-    this.renderEntities = this.renderEntities.bind(this);
+    // this.renderEntities = this.renderEntities.bind(this);
     this.renderStatic   = this.renderStatic.bind(this);
     this.renderForm     = this.renderForm.bind(this);
     this.renderButton   = this.renderButton.bind(this);
@@ -59,9 +59,9 @@ class ArticleEditor extends Component {
     post.title   = this.formTitle.value;
     post.source  = this.formSource.value;
     post.excerpt = this.formExcerpt.value;
-    
-    const entitiesArray = this.formEntities.value.split(',').map(el => el.trim());
-    post.entities = entitiesArray;
+
+    // const entitiesArray = this.formEntities.value.split(',').map(el => el.trim());
+    // post.entities = entitiesArray;
 
     this.setState({
       post: post,
@@ -78,7 +78,7 @@ class ArticleEditor extends Component {
   }
 
   apiPost = async (obj) => {
-    const response = await axios.post('/api/posts', obj);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`, obj);
     const body = await response.data;
 
     if (response.status !== 200) throw Error(body.message);
@@ -98,7 +98,7 @@ class ArticleEditor extends Component {
           <h3 id="article-title">{post.title}</h3>
           <h4 id="article-source">{post.source}</h4>
           <p id="article-description">{post.excerpt}</p>
-          {this.renderEntities()}
+          {/*this.renderEntities()*/}
         </div>
         {this.renderButton()}
       </div>
@@ -113,7 +113,7 @@ class ArticleEditor extends Component {
           <textarea id="article-title" type="text" name="article-title" defaultValue={post.originalTitle} required autoComplete="off" ref={(title) => {this.formTitle = title}}></textarea>
           <input id="article-source" type="text" name="article-source" defaultValue={post.source} required autoComplete="off" ref={(source) => {this.formSource = source}}  />
           <textarea id="article-description" type="text" name="article-description" defaultValue={post.excerpt} required autoComplete="off" ref={(desc) => {this.formExcerpt = desc}}></textarea>
-          {this.renderEntities()}
+          {/*this.renderEntities()*/}
         </form>
         {this.renderButton()}
       </div>
@@ -131,24 +131,24 @@ class ArticleEditor extends Component {
       )
     }
   }
-  
-  renderEntities() {
-    const entities = this.state.post.entities;
-    
-    if (!this.state.editing){
-      return(
-        <ul id="article-entities">{
-          entities.map((item, i) => <li key={i}><p>{item}</p></li>)
-          }
-        </ul>
-      )
-    } else {
-      const editEntities = entities.join(', ');
-      return(
-        <input id="article-entities" type="text" name="article-entities" defaultValue={editEntities} ref={(entities) => this.formEntities = entities} />
-      )
-    }
-  }
+
+  // renderEntities() {
+  //   const entities = this.state.post.entities;
+  //
+  //   if (!this.state.editing){
+  //     return(
+  //       <ul id="article-entities">{
+  //         entities.map((item, i) => <li key={i}><p>{item}</p></li>)
+  //         }
+  //       </ul>
+  //     )
+  //   } else {
+  //     const editEntities = entities.join(', ');
+  //     return(
+  //       <input id="article-entities" type="text" name="article-entities" defaultValue={editEntities} ref={(entities) => this.formEntities = entities} />
+  //     )
+  //   }
+  // }
 
   renderMessage() {
     return (

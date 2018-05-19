@@ -2,7 +2,13 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001/",
+  "proxy": {
+    "/api/*": {
+      "target": "http://159.89.126.3:3001",
+      "changeOrigin": true
+    }
+  },
+  "homepage": "https://colinrabyniuk.com/newsfeed/",
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "concurrently": "3.0.0",
@@ -20,8 +26,8 @@
     "react-router-dom": "^4.2.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_API_URL=http://localhost:3001 react-scripts start",
+    "build": "REACT_APP_API_URL=http://159.89.126.3:3001 react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

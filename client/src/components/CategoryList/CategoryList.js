@@ -27,7 +27,8 @@ class CategoryList extends Component {
       });
   }
 
-  getCategories = () => { return axios.get('/api/feeds/categories'); }
+  getCategories = () => { return axios.get(`${process.env.REACT_APP_API_URL}/api/feeds/categories`); }
+
 
   handleClick(e) {
     e.preventDefault();

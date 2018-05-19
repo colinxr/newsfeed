@@ -67,7 +67,7 @@ class ArticleList extends Component {
 
   getAllArticles = () => {
     return new Promise((resolve, reject) => {
-      axios.get('/api/feeds')
+      axios.get(`${process.env.REACT_APP_API_URL}/api/feeds`)
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
@@ -75,7 +75,7 @@ class ArticleList extends Component {
 
   getCatArticles = (cat) => {
     return new Promise((resolve, reject) => {
-      axios.get(`/api/feeds/${cat}`)
+      axios.get(`${process.env.REACT_APP_API_URL}/api/feeds/${cat}`)
         .then(resp => resolve(resp))
         .catch(err => reject(err));
     });
