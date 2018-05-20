@@ -1,19 +1,24 @@
 .featured-post {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 66% 1fr;
   grid-column-gap: 25px;
   margin-bottom: 50px;
 }
 
-.featured-post__img {
-  grid-column-span: 2;
-  background-color: grey;
-}
+.featured-post__img .img-wrap { height: auto; }
 
 .featured-post__content {
-  grid-column: 3;
 }
 
 .featured-post h2 {
   font-size: 20pt;
+}
+
+@media screen and (max-width: 728px) {
+  .wrapper--front-page  { grid-template-columns: 1fr 1fr; }
+}
+
+
+@media screen and (max-width: 540px) {
+  .wrapper--front-page .featured-post { display: block; }
 }

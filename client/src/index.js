@@ -10,7 +10,7 @@ import Admin from './components/Admin/Admin';
 
 const Root = () => {
   return (
-    <BrowserRouter basename="/newsfeed">
+    <BrowserRouter basename={process.env.REACT_APP_BASENAME}>
       <div>
         <Route exact path="/" component={FrontPage} />
         <Route exact path="/stories/:tag" component={StoriesPage} />

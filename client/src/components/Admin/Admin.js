@@ -38,7 +38,9 @@ class Admin extends Component {
     return (
       <div className="Admin">
         <header className="Admin-header">
-          <h1 className="Admin-title"><a href="/">A1: NewsFeed</a></h1>
+          <div className="header__wrapper">
+            <h2><a href="/newsfeed">This is A1</a></h2>
+          </div>
         </header>
         <div className="admin__container">
           <div>

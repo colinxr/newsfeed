@@ -5,3 +5,7 @@
 }
 
 img { width: 100%; }
+
+.post__img-wrap {
+  margin-bottom: 10px;
+}

@@ -57,17 +57,19 @@ class FrontPage extends React.Component {
 
     return (
       <div>
-        <h2><a href="/admin">This is A1</a></h2>
-        <h4>Because you shouldn't get your news from Facebook</h4>
+        <header class="header--main">
+          <div className="header__wrapper">
+            <h2><a href="/admin">This is A1</a></h2>
+          </div>
+        </header>
         <div className="wrapper wrapper--front-page">
-          <FeaturedPost featuredPost={this.state.featured} />
+          <FeaturedPost featuredPost={this.state.featured} removePost={this.removePost} />
           <div className="wrapper--front-page__posts">
             {
               Object
               .keys(posts)
-              //.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-              .map(key => <Post key={key} index={key}
-                postInfo={this.state.posts[key]} removePost={this.removePost}/>)
+              // .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              .map(key => <Post key={key} index={key} postInfo={this.state.posts[key]} removePost={this.removePost}/>)
             }
           </div>
         </div>

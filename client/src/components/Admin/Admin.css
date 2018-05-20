@@ -1,3 +1,6 @@
+.Admin-header .header__wrapper {
+  max-width: 1240px;
+}
 .admin__container {
   display: grid;
   grid-template-columns: 50% 33%;

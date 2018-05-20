@@ -133,7 +133,7 @@ categoryFeed = (req, res) => {
           // sort stories by reverse chron
           reverseChron = (arr, date) => {
             return arr.slice().sort((a, b) => {
-              console.log(a['meta']['title']);
+              // console.log(a['meta']['title']);
               return a[date] < b[date] ? 1 : -1;
             });
           }

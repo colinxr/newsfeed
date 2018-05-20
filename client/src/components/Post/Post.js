@@ -30,9 +30,12 @@ class Post extends Component {
       message: response.data.message
     });
   }
-  
+
   render() {
     const post = this.props.postInfo;
+    let date = new Date(Date.parse(post.date));
+
+    date = date.toDateString();
 
     return (
       <div className="post-entry">
@@ -40,18 +43,19 @@ class Post extends Component {
           <Thumbnail
             classname="post"
             location="frontPage"
-            postUrl={post.url}
-            url={post.urlToImage}
+            postUrl={ post.url }
+            url={ post.urlToImage }
           />
-          <h4>{post.source}</h4>
-          <h2 className="post-entry__title post-title"><a href={post.url} className="post-entry__title-link">{post.title}</a></h2>
-          <TagList tags={post.entities} />
+          <h4>{ post.source }</h4>
+          <h2 className="post-entry__title post-title"><a href={ post.url } target="_blank" className="post-entry__title-link">{ post.title }</a></h2>
+          <TagList tags={ post.entities } />
+          <span class="post-entry__date">{ date }</span>
         </header>
         <div className="post-entry__description">
-          <p>{post.description}</p>
+          <p>{ post.description }</p>
         </div>
         <div className="post-entry__action-bar">
-          <span className="post-entry__action-bar__delete" onClick={(e) => this.handleDelete(e)}>Delete Story</span>
+          <span className="post-entry__action-bar__delete" onClick={ (e) => this.handleDelete(e) }>Delete Story</span>
         </div>
       </div>
     );
