@@ -17,7 +17,7 @@ class TagList extends Component {
             if (tag.indexOf(' ')) tagSlug = tag.toLowerCase().split(' ').join('-').trim();
 
             return (
-              <li key={tag}><a href={'/stories/' + tagSlug }>{tag.trim()}</a></li>
+              <li key={tag}><a href={'/newsfeed/stories/' + tagSlug }>{tag.trim()}</a></li>
             );
           })
         }

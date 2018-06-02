@@ -59,7 +59,7 @@ class FrontPage extends React.Component {
       <div>
         <header class="header--main">
           <div className="header__wrapper">
-            <h2><a href="/admin">This is A1</a></h2>
+            <h2><a href="/newsfeed/admin">This is A1</a></h2>
           </div>
         </header>
         <div className="wrapper wrapper--front-page">
