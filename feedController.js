@@ -15,11 +15,21 @@ getCategories = (req, res) => {
   res.send(feedCats);
 }
 
+filterByDate = (item) => {
+  const now = Date.now();
+  const pubDate = Date.parse(item[`pubdate`]);
+
+  if ((now - pubDate) < 86400000) {
+    item.newsMeta = {};
+    return item;
+  }
+}
+
 analyzeContent = (item, feed) => {
   const title = item.title;
   const desc = item.summary ? item.summary.replace(/(<([^>]+)>)/ig,"") : '';
-
   const text = `${title}. ${desc}`;
+
   const document = {
     content: text,
     type: 'PLAIN_TEXT',
@@ -32,24 +42,13 @@ analyzeContent = (item, feed) => {
         return obj.salience > 0.12;
       }
 
-      const entities = results[0].entities;
-      const relevant = entities.filter(relevantEntity);
+      const relevant = results[0].entities.filter(relevantEntity);
       const topics = relevant.map(topic => topic.name); // only use names of the entities
 			item.newsMeta.source = feed;
 			item.newsMeta.entities = topics;
       return item;
     })
    .catch(err => res.status(500).send(err.message));
-}
-
-filterByDate = (item) => {
-  const now = Date.now();
-  const pubDate = Date.parse(item[`pubdate`]);
-
-  if ((now - pubDate) < 86400000) {
-    item.newsMeta = {};
-    return item;
-  }
 }
 
 parseFeed = (feed) => {
