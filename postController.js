@@ -1,4 +1,9 @@
-const Bluebird   = require('bluebird');
+const fs 				 = require('fs');
+const path 			 = require('path');
+const request 	 = require('request');
+const http 			 = require('http');
+const https 		 = require('https');
+const Stream 		 = require('stream').Transform;
 const Entry      = require('./models/Entry');
 const routes     = require('express').Router();
 
@@ -24,6 +29,15 @@ getPostsByTag = (req, res) => {
 }
 
 savePost = (req, res) => {
+	const imgUrl = req.body.urlToImage;
+	const fileName = getFileName(imgUrl);
+	const dir = __dirname + '/public/imgs';
+	if (!fs.existsSync(dir)) fs.mkdirSync(dir, 0744);
+
+	saveImg(imgUrl, fileName, dir);
+
+	req.body.urlToImage = `159.89.126.3/${dir}/${fileName}`;
+
   const newEntry = new Entry(req.body);
   newEntry.save()
     .then(entry => {
@@ -41,6 +55,16 @@ deletePost = (req, res) => {
   Entry.remove({ _id: req.params.id })
     .then(entry => res.send({ message: 'Post has been deleted.' }))
     .catch(err => res.send({ message: 'error' }));
+}
+
+getFileName = (url) => url.substr(url.lastIndexOf('/') + 1)}
+
+saveImg = (url, filename, path) => {
+	request
+		.get(url)
+		.on('response', (resp) => console.log(resp.headers[`content-type`]))
+		.on('error', (err) => console.err(err))
+		.pipe(fs.createWriteStream(`${path}/${filename}`));
 }
 
 module.exports = {

@@ -4,7 +4,6 @@ const language   = require('@google-cloud/language');
 const routes     = require('express').Router();
 const feeds      = require('./feeds').feeds;
 const Entry      = require('./models/Entry');
-
 const client     = new language.LanguageServiceClient()
 
 getCategories = (req, res) => {
@@ -23,6 +22,13 @@ filterByDate = (item) => {
     item.newsMeta = {};
     return item;
   }
+}
+
+// sort stories by reverse chron
+reverseChron = (arr, date) => {
+	return arr.slice().sort((a, b) => {
+		return a[date] < b[date] ? 1 : -1;
+	});
 }
 
 analyzeContent = (item, feed) => {
@@ -59,12 +65,11 @@ parseFeed = (feed) => {
   const fpConfig = {
     feedurl: feed.url,
     addmeta: true,
-    normalize: true
+    normalize: true,
   }
 
   return feedParser.parse(httpConfig, fpConfig)
     .then(items => {
-
       let articles = items.filter(item => filterByDate(item)) // filter items by last 24 hours.
 			articles = feed.priority > 3 ? articles.slice(0, articles.length / 3) : articles;
 			articles = articles.map(article => analyzeContent(article, feed));
@@ -78,7 +83,6 @@ adminFeed = (req, res) => {
   let feedList = Object
     .keys(feeds)
     .map(key => feeds[key])
-
 	 feedList = [].concat.apply([], feedList);
 
 	 transformFeedData(res, feedList);
@@ -87,7 +91,7 @@ adminFeed = (req, res) => {
 categoryFeed = (req, res) => {
   // get the category
   const cat = req.params.category;
-  let feedList = Object
+  const feedList = Object
     .keys(feeds[cat])
     .map(key => feeds[cat][key]);
 
@@ -115,12 +119,7 @@ transformFeedData = (res, feedList) => {
       Bluebird.all(stories)
         .then(resp => {
           const date = [`pubdate`];
-          // sort stories by reverse chron
-          reverseChron = (arr, date) => {
-            return arr.slice().sort((a, b) => {
-              return a[date] < b[date] ? 1 : -1;
-            });
-          }
+
           const sortedFeed = reverseChron(resp, date);
 		          // const last = sortedFeed.length - 1;
 		          // console.dir(sortedFeed[last], {depth: null, colors: true});
