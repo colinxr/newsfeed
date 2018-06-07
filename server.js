@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -30,6 +31,12 @@ app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
+
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: false,
+}));
 
 app.use('/', routes);
 

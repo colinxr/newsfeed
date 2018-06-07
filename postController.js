@@ -57,7 +57,7 @@ deletePost = (req, res) => {
     .catch(err => res.send({ message: 'error' }));
 }
 
-getFileName = (url) => url.substr(url.lastIndexOf('/') + 1)}
+getFileName = (url) => url.substr(url.lastIndexOf('/') + 1);
 
 saveImg = (url, filename, path) => {
 	request

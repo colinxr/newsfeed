@@ -2,6 +2,14 @@ const router = require('express').Router();
 const Entry  = require('./models/Entry');
 const feedController = require('./feedController');
 const postController = require('./postController');
+const userController = require('./userController');
+
+//auth routes
+
+router.post(
+	'/auth/users',
+	userController.authenticateUser
+);
 
 //admin routes
 router.get(
