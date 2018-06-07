@@ -1,7 +1,7 @@
 const Bluebird   = require('bluebird');
 const feedParser = require('feedparser-promised');
 const language   = require('@google-cloud/language');
-const feeds      = require('../feeds').feeds;
+const feeds      = require('../feeds')
 const Entry      = require('../models/Entry');
 
 const client     = new language.LanguageServiceClient()
@@ -84,6 +84,8 @@ adminFeed = (req, res) => {
     .keys(feeds)
     .map(key => feeds[key])
 	 feedList = [].concat.apply([], feedList);
+
+	 console.log('getting feed data');
 
 	 transformFeedData(res, feedList);
 }

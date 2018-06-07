@@ -2,12 +2,13 @@ const routes     = require('express').Router();
 const User       = require('../models/User');
 
 authenticateUser = (req, res, next) => {
-	const {email, username, password, passwordConf, loginEmail, loginPassword} = req.body;
+	const {email, password, passwordConf, loginEmail, loginPassword} = req.body;
 
-	if (email && username && password && passwordConf) {
+	console.log(req.body);
+
+	if (email && password && passwordConf) {
 		const userData = {
 			email,
-			username,
 			password,
 			passwordConf,
 		}

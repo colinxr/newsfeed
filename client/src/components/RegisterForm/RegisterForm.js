@@ -13,29 +13,30 @@ class RegisterForm extends Component {
       password: ''
     }
 
-    this.userLogin = this.userLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
   }
 
-  userLogin(e){
+  handleRegister(e){
     e.preventDefault();
-    const username = this.formUsername.value;
     const email = this.formEmail.value;
-    //const password = this.formPassword.value;
+    const password = this.formPassword.value;
+		const passwordConf = this.formPasswordConf.value;
 
     this.setState({
-      username: username,
       email: email,
-      //password: password
+      password: password,
+			passwordConf: passwordConf,
     });
 
     const user = {
-      'username': this.state.username,
-      'password': this.state.email
+      email,
+			password,
+			passwordConf,
     }
 
     console.log(user);
 
-    axios.post('/api/register', user)
+    axios.post('/auth/users', user)
       .then(resp => {
         console.log(resp);
       })
@@ -43,10 +44,11 @@ class RegisterForm extends Component {
 
   render() {
     return (
-      <form onSubmit={(e) => this.userLogin(e)} className="login">
-        <input type="text" name="username" placeholder="username" required ref={(input) => {this.formUsername = input}} />
-        <input type="text" name="email" placeholder="email" required ref={(input) => {this.formEmail = input}} />
-        <button type="submit" onClick={(e) => this.userLogin(e)}>Register →</button>
+      <form onSubmit={(e) => this.handleRegister(e)} className="login">
+        <input type="text" name="email" placeholder="Email" required ref={(input) => {this.formEmail = input}} />
+				<input type="text" name="password" placeholder="Password" required ref={(input) => {this.formPassword = input}} />
+				<input type="text" name="passwordConf" placeholder="Password confirmation" required ref={(input) => {this.formPasswordConf = input}} />
+        <button type="submit" onClick={(e) => this.handleRegister(e)}>Register →</button>
       </form>
     )
   }
