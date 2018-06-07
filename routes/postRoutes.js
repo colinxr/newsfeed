@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const postController = require('../postController');
+const postController = require('../controllers/postController');
 
 //front page routes
 router

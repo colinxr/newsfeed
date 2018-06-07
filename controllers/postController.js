@@ -4,8 +4,7 @@ const request 	 = require('request');
 const http 			 = require('http');
 const https 		 = require('https');
 const Stream 		 = require('stream').Transform;
-const Entry      = require('./models/Entry');
-const routes     = require('express').Router();
+const Entry      = require('../models/Entry');
 
 getPosts = (req, res) => {
   Entry.find()

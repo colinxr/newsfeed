@@ -1,18 +1,15 @@
-const User       = require('./models/User');
 const routes     = require('express').Router();
+const User       = require('../models/User');
 
 authenticateUser = (req, res, next) => {
+	const {email, username, password, passwordConf, loginEmail, loginPassword} = req.body;
 
-	if (req.body.email &&
-		req.body.username &&
-		req.body.password &&
-		req.body.passwordConf) {
-
+	if (email && username && password && passwordConf) {
 		const userData = {
-			email: req.body.email,
-			username: req.body.username,
-			password: req.body.password,
-			passwordConf: req.body.passwordConf,
+			email,
+			username,
+			password,
+			passwordConf,
 		}
 
 		User.create(userData, (err, user) => {
@@ -22,8 +19,8 @@ authenticateUser = (req, res, next) => {
         message: 'User Added Successfully'
       });
 		})
-	} else if (req.body.loginEmail && req.body.loginPassword) {
-		User.authenticate(req.body.loginEmail, req.body.loginPassword, (err, user) => {
+	} else if (loginEmail && loginPassword) {
+		User.authenticate(loginEmail, loginPassword, (err, user) => {
 			if (err || !user) {
 				const err = new Error('Wrong Email or Password');
 				err.status = 401;

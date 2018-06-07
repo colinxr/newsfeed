@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const feedController = require('../feedController');
+const feedController = require('../controllers/feedController');
 
 //admin routes
 router

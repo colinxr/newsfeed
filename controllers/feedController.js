@@ -1,9 +1,9 @@
-const feedParser = require('feedparser-promised');
 const Bluebird   = require('bluebird');
+const feedParser = require('feedparser-promised');
 const language   = require('@google-cloud/language');
-const routes     = require('express').Router();
-const feeds      = require('./feeds').feeds;
-const Entry      = require('./models/Entry');
+const feeds      = require('../feeds').feeds;
+const Entry      = require('../models/Entry');
+
 const client     = new language.LanguageServiceClient()
 
 getCategories = (req, res) => {

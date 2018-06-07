@@ -95,4 +95,4 @@ const feeds = {
   ],
 }
 
-module.exports = { feeds };
+module.exports = feeds;
