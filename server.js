@@ -1,10 +1,11 @@
-const express = require('express');
-const session = require('express-session');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const path = require('path');
+const express 				 = require('express');
+const session 				 = require('express-session');
+const mongoose 				 = require('mongoose');
+const MongoStore 			 = require('connect-mongo')(session);
+const bodyParser 			 = require('body-parser');
+const path 						 = require('path');
 const expressValidator = require('express-validator');
-const flash = require('express-flash');
+const flash 					 = require('express-flash');
 
 require('dotenv').config({ path: 'config.env' });
 
@@ -36,11 +37,14 @@ app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: true,
 	saveUninitialized: false,
+	store: new MongoStore({
+		mongooseConnection: mongoose.connection,
+	}),
 }));
 
 app.use('/', routes);
 
 app.set('port', process.env.PORT || 3001);
 const server = app.listen(app.get('port'), () => {
-  console.log(`Express running -> PORT ${server.address().port}`);
+  console.log(`Express running -> PORT ${server.address().port} 💥 🤔 😕`);
 });

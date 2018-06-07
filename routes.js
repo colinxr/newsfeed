@@ -11,6 +11,11 @@ router.post(
 	userController.authenticateUser
 );
 
+router.get(
+	'/auth/logout',
+	userController.logoutUser
+);
+
 //admin routes
 router.get(
   '/api/feeds',

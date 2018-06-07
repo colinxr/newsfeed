@@ -43,6 +43,20 @@ authenticateUser = (req, res, next) => {
 	}
 }
 
+logoutUser = (req, res, next) => {
+	if (req.session) {
+		req.session.destroy(err => {
+			if (err) return next(err);
+
+			res.send({
+				success: true,
+				message: 'User logged out sucessfully',
+			});
+		});
+	}
+}
+
 module.exports = {
-	authenticateUser
+	authenticateUser,
+	logoutUser,
 }
