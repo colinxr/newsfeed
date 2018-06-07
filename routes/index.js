@@ -1,11 +1,11 @@
 const router 			= require('express').Router();
 const Entry  			= require('../models/Entry');
-const userRoutes  = require('./userRoutes');
-const adminRoutes = require('./adminRoutes');
-const postRoutes  = require('./postRoutes');
+const userRoutes  = require('../controllers/userRoutes');
+const postRoutes  = require('../controllers/postRoutes');
+const adminRoutes = require('../controllers/adminRoutes');
 
 router.use('/auth/', userRoutes);
-router.use('/api/feeds', adminRoutes);
 router.use('/api/posts', postRoutes);
+router.use('/api/feeds', adminRoutes);
 
 module.exports = router;
