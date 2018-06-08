@@ -4,9 +4,9 @@ const feedController = require('../controllers/feedController');
 
 //admin routes
 router
-	.get('/', mid.requiresLogin, feedController.adminFeed)
-	.get('/categories', mid.requiresLogin, feedController.getCategories)
-	.get('/:category', mid.requiresLogin, feedController.categoryFeed)
-	.get('/:category/:id', mid.requiresLogin, feedController.singleFeed);
+	.get('/', feedController.adminFeed)
+	.get('/categories', feedController.getCategories)
+	.get('/:category', feedController.categoryFeed)
+	.get('/:category/:id', feedController.singleFeed);
 
 	module.exports = router;

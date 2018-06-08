@@ -49,7 +49,7 @@ class Post extends Component {
           <h4>{ post.source }</h4>
           <h2 className="post-entry__title post-title"><a href={ post.url } target="_blank" className="post-entry__title-link">{ post.title }</a></h2>
           <TagList tags={ post.entities } />
-          <span class="post-entry__date">{ date }</span>
+          <span className="post-entry__date">{ date }</span>
         </header>
         <div className="post-entry__description">
           <p>{ post.description }</p>

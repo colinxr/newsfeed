@@ -57,7 +57,7 @@ class FrontPage extends React.Component {
 
     return (
       <div>
-        <header class="header--main">
+        <header className="header--main">
           <div className="header__wrapper">
             <h2><a href="/newsfeed/admin">This is A1</a></h2>
           </div>

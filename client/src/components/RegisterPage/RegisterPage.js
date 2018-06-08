@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 
 import './RegisterPage.css';
@@ -9,22 +10,24 @@ class RegisterPage extends Component {
 
 		this.state = {
 			login: true,
-			finished: false,
+			redirect: false,
+			errMessage: '',
 		}
 
 		this.toggleForm = this.toggleForm.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.authApiCall = this.authApiCall.bind(this);
+		this.setRedirect = this.setRedirect.bind(this);
 	}
 
-	handleSubmit(e){
+	handleSubmit(e) {
 		e.preventDefault();
 		let user;
-		const email = this.formEmail.value;
-		const password = this.formPassword.value;
+		const email = this.formEmail.value ? this.formEmail.value : '';
+		const password = this.formPassword.value ? this.formPassword.value : '';
 
-		if (this.state.form !== 'login') {
-			const passwordConf = this.formPasswordConf.value;
+		if (!this.state.login) {
+			const passwordConf = this.formPasswordConf.value ? this.formPasswordConf.value : '';
 			user = {
 				email,
 				password,
@@ -38,8 +41,21 @@ class RegisterPage extends Component {
 		}
 
 		this.authApiCall(user)
-			.then(resp => console.log(resp))
-			.catch(err => alert(err));
+			.then(resp => {
+				console.log(resp);
+				if (resp.data.success) {
+					console.log(resp.data.sessionId);
+					console.log(resp.data.cookie);
+					localStorage.setItem('newsFeedSession', JSON.stringify(resp.data.sessionId));
+					console.log('redirecting');
+					this.setRedirect();
+				}
+			})
+			.catch(resp => {
+				console.log(resp);
+				// this.setState({errMessage: err})
+				// console.log(this.state.errMessage);
+			});
 	}
 
 	authApiCall(user) {
@@ -49,6 +65,18 @@ class RegisterPage extends Component {
 				.catch(err => reject(err));
 		})
 	}
+
+	setRedirect() {
+	 this.setState({
+		 redirect: true
+	 })
+ }
+
+ renderRedirect() {
+	 if (this.state.redirect) {
+		 return <Redirect to='/admin' />
+	 }
+ }
 
 	toggleForm() {
 		this.setState(prevState => ({
@@ -100,10 +128,11 @@ class RegisterPage extends Component {
         <div className="register-container">
 					{
 					 !this.state.login ? this.renderRegistrationForm() : this.renderLoginForm()
-
 					}
-
         </div>
+
+				{this.renderRedirect()}
+
       </div>
     )
   }

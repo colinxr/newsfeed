@@ -32,6 +32,8 @@ authenticateUser = (req, res, next) => {
 			res.send({
 				success: true,
 				message: 'User Logged In Successfully',
+				sessionId: req.session.userId,
+				cookie: req.session.cookie,
 			});
 		})
 	} else {
