@@ -1,0 +1,37 @@
+.Register-Page header {
+	padding: 0 25px 0 25px;
+}
+
+.Register-Page h1 {
+	display: inline-block;
+	width: 33%;
+}
+
+.form-toggle {
+	color: #6a6c6b;
+	font-size: 10pt;
+	margin: 25px 0;
+	float: right;
+}
+
+.register-container {
+  width: 450px;
+  margin: 0 auto;
+  transform: translateY(50%);
+}
+
+.login input {
+  border: 1px solid #6a6c6b;
+	border-radius: 3px;
+	font-size: 12pt;
+	padding: 15px;
+}
+
+.login button {
+	font-size: 14pt;
+	border: 1px solid #999;
+	border-radius: 3px;
+	margin-top: 25px;
+	padding: 15px 25px;
+	float: right;
+}
