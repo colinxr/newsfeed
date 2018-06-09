@@ -4,7 +4,6 @@ const User       = require('../models/User');
 authenticateUser = (req, res, next) => {
 	const {email, password, passwordConf, loginEmail, loginPassword} = req.body;
 
-	console.log(req.body);
 
 	if (email && password && passwordConf) {
 		const userData = {
@@ -25,9 +24,16 @@ authenticateUser = (req, res, next) => {
 			if (err || !user) {
 				const err = new Error('Wrong Email or Password');
 				err.status = 401;
-				return next(err);
+				res.send({
+					success: false,
+					err: 'Wrong Email or Password',
+				});
+
+				console.log(err);
+				return false;
 			}
 
+			console.log(user._id);
 			req.session.userId = user._id;
 			res.send({
 				success: true,
@@ -39,7 +45,7 @@ authenticateUser = (req, res, next) => {
 	} else {
 		const err = new Error('All fields required');
 		err.status = 400;
-		return next(err);
+		res.send(err);
 	}
 }
 

@@ -18,6 +18,7 @@ class RegisterPage extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.authApiCall = this.authApiCall.bind(this);
 		this.setRedirect = this.setRedirect.bind(this);
+		this.setErrorMsg = this.setErrorMsg.bind(this);
 	}
 
 	handleSubmit(e) {
@@ -42,19 +43,20 @@ class RegisterPage extends Component {
 
 		this.authApiCall(user)
 			.then(resp => {
-				console.log(resp);
 				if (resp.data.success) {
 					console.log(resp.data.sessionId);
 					console.log(resp.data.cookie);
 					localStorage.setItem('newsFeedSession', JSON.stringify(resp.data.sessionId));
 					console.log('redirecting');
 					this.setRedirect();
+				} else {
+					console.log(resp.data.err);
+					this.setErrorMsg(resp.data.err);
 				}
 			})
 			.catch(resp => {
 				console.log(resp);
-				// this.setState({errMessage: err})
-				// console.log(this.state.errMessage);
+
 			});
 	}
 
@@ -72,9 +74,24 @@ class RegisterPage extends Component {
 	 })
  }
 
+ setErrorMsg(msg) {
+	 this.setState({errMessage: msg});
+ }
+
+
  renderRedirect() {
 	 if (this.state.redirect) {
 		 return <Redirect to='/admin' />
+	 }
+ }
+
+ renderErrorMsg() {
+	 if (this.state.errMessage) {
+		 return (
+			 <div className="login-error">
+				 <span className="login-error__text">{this.state.errMessage}</span>
+			 </div>
+		 )
 	 }
  }
 
@@ -95,6 +112,7 @@ class RegisterPage extends Component {
 		return (
 			<div>
 				<h2>Register</h2>
+				{this.renderErrorMsg()}
 				<form onSubmit={(e) => this.handleSubmit(e)} className="login">
 	        <input type="text" name="email" placeholder="Email" required ref={(input) => {this.formEmail = input}} />
 					<input type="text" name="password" placeholder="Password" required ref={(input) => {this.formPassword = input}} />
@@ -109,6 +127,7 @@ class RegisterPage extends Component {
 		return (
 			<div className="">
 				<h2>Log in</h2>
+				{this.renderErrorMsg()}
 				<form onSubmit={(e) => this.handleSubmit(e)} className="login">
 					<input type="text" name="email" placeholder="Email" required ref={(input) => {this.formEmail = input}} />
 					<input type="text" name="password" placeholder="Password" required ref={(input) => {this.formPassword = input}} />
