@@ -9,6 +9,7 @@ class FeaturedPost extends Component {
   constructor() {
     super();
 
+    this.renderActionBar = this.renderActionBar.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.apiDelete = this.apiDelete.bind(this);
   }
@@ -32,6 +33,14 @@ class FeaturedPost extends Component {
     });
   }
 
+  renderActionBar() {
+    return (
+      <div className="post-entry__action-bar">
+        <span className="post-entry__action-bar__delete" onClick={ (e) => this.handleDelete(e) }>Delete Story</span>
+      </div>
+    )
+  }
+
   render() {
     const featuredPost = this.props.featuredPost;
     return(
@@ -40,19 +49,17 @@ class FeaturedPost extends Component {
           <Thumbnail
             classname="post"
             location="frontPage"
-            postUrl={featuredPost.url}
-            url={featuredPost.urlToImage}
+            postUrl={ featuredPost.url }
+            url={ featuredPost.urlToImage }
           />
         </div>
         <div className="featued-post__content">
-          <h4>{featuredPost.source}</h4>
-          <h2 className="post-entry__title post-title"><a href={featuredPost.url} target="_blank" className="post-entry__title-link">{featuredPost.title}</a></h2>
+          <h4>{ featuredPost.source }</h4>
+          <h2 className="post-entry__title post-title"><a href={ featuredPost.url } target="_blank" className="post-entry__title-link">{ featuredPost.title }</a></h2>
           <div className="post-entry__description">
-            <p>{featuredPost.description}</p>
+            <p>{ featuredPost.description }</p>
           </div>
-          <div className="post-entry__action-bar">
-            <span className="post-entry__action-bar__delete" onClick={ (e) => this.handleDelete(e) }>Delete Story</span>
-          </div>
+          { this.props.isLoggedIn ? this.renderActionBar() : '' }
         </div>
       </div>
     )

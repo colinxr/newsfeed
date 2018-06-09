@@ -11,15 +11,19 @@ class FrontPage extends React.Component {
     super();
 
     this.state = {
+      isLoggedIn: false,
       posts: [],
       featured: [],
     }
 
+    this.authenticateUser = this.authenticateUser.bind(this);
     this.callApi = this.callApi.bind(this);
     this.removePost = this.removePost.bind(this);
   }
 
   componentDidMount() {
+    this.authenticateUser();
+
     this.callApi()
       .then(resp => {
         const featured = resp.shift();
@@ -30,6 +34,14 @@ class FrontPage extends React.Component {
       })
       .catch(err => console.log(err));
   }
+
+	authenticateUser() {
+		const localStorageRef = localStorage.getItem('newsFeedSession');
+		console.log(localStorageRef);
+		if (localStorageRef) {
+			this.setState({isLoggedIn: true});
+		}
+	}
 
   callApi = async () => {
     const response = await axios(`${process.env.REACT_APP_API_URL}/api/posts`);
@@ -53,7 +65,7 @@ class FrontPage extends React.Component {
   }
 
   render() {
-    const {posts, featured} = {...this.state};
+    const { posts, featured, isLoggedIn } = this.state;
 
     return (
       <div>
@@ -63,13 +75,16 @@ class FrontPage extends React.Component {
           </div>
         </header>
         <div className="wrapper wrapper--front-page">
-          <FeaturedPost featuredPost={this.state.featured} removePost={this.removePost} />
+          <FeaturedPost
+            isLoggedIn={isLoggedIn}
+            featuredPost={featured}
+            removePost={this.removePost} />
           <div className="wrapper--front-page__posts">
             {
               Object
               .keys(posts)
               // .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-              .map(key => <Post key={key} index={key} postInfo={this.state.posts[key]} removePost={this.removePost}/>)
+              .map(key => <Post key={key} index={key} isLoggedIn={isLoggedIn}  postInfo={posts[key]} removePost={this.removePost}/>)
             }
           </div>
         </div>

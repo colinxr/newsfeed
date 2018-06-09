@@ -8,6 +8,8 @@ import TagList from '../TagList/TagList';
 class Post extends Component {
   constructor() {
     super();
+
+    this.renderActionBar = this.renderActionBar.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
@@ -29,6 +31,14 @@ class Post extends Component {
       post: null,
       message: response.data.message
     });
+  }
+
+  renderActionBar() {
+    return (
+      <div className="post-entry__action-bar">
+        <span className="post-entry__action-bar__delete" onClick={ (e) => this.handleDelete(e) }>Delete Story</span>
+      </div>
+    )
   }
 
   render() {
@@ -54,9 +64,7 @@ class Post extends Component {
         <div className="post-entry__description">
           <p>{ post.description }</p>
         </div>
-        <div className="post-entry__action-bar">
-          <span className="post-entry__action-bar__delete" onClick={ (e) => this.handleDelete(e) }>Delete Story</span>
-        </div>
+        { this.props.isLoggedIn ? this.renderActionBar() : '' }
       </div>
     );
   }
