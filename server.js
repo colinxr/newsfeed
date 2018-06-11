@@ -20,6 +20,7 @@ mongoose.connection.on('error', (err) => {
 const app = express();
 const router = express.Router();
 
+app.use('/media', express.static(__dirname + '/media'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());

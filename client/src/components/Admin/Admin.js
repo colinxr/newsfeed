@@ -19,7 +19,6 @@ class Admin extends Component {
       isLoading: true,
     }
 
-		// this.authenticate = this.authenticate.bind(this);
 		this.renderAdminPage = this.renderAdminPage.bind(this);
 		this.renderRedirect  = this.renderRedirect.bind(this);
     this.sendToEditor    = this.sendToEditor.bind(this);
@@ -27,15 +26,10 @@ class Admin extends Component {
     this.clearEditor     = this.clearEditor.bind(this);
   }
 
-	componentDidMount() {
-		if (authenticateUser()) this.setState({isLoggedIn: true});
+	componentWillMount() {
+		console.log('authenticating');
+		authenticateUser() ? this.setState({ isLoggedIn: true, redirect: false }) : '';
 	}
-
-	renderRedirect() {
-		if (this.state.redirect) {
-			return <Redirect to='/register' />
-	 	}
-  }
 
   sendToEditor = (obj) => {
     this.setState({ articleToEdit: obj });
@@ -47,6 +41,14 @@ class Admin extends Component {
 
   selectCat = (category) => {
     this.setState({ category });
+  }
+
+	renderRedirect() {
+		console.log(this.state);
+		console.log('redirecting');
+		if (this.state.redirect) {
+			return <Redirect to='/register' />
+	 	}
   }
 
 	renderAdminPage() {

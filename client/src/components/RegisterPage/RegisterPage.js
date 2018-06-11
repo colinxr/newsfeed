@@ -43,11 +43,10 @@ class RegisterPage extends Component {
 
 		this.authApiCall(user)
 			.then(resp => {
+				console.log(resp);
 				if (resp.data.success) {
-					console.log(resp.data.sessionId);
-					console.log(resp.data.cookie);
+					console.log(resp.data);
 					localStorage.setItem('newsFeedSession', JSON.stringify(resp.data.sessionId));
-					console.log('redirecting');
 					this.setRedirect();
 				} else {
 					console.log(resp.data.err);
@@ -77,7 +76,6 @@ class RegisterPage extends Component {
  setErrorMsg(msg) {
 	 this.setState({errMessage: msg});
  }
-
 
  renderRedirect() {
 	 if (this.state.redirect) {

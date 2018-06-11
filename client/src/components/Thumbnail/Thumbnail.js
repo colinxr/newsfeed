@@ -4,7 +4,8 @@ import './Thumbnail.css';
 
 class Thumbnail extends Component {
   render() {
-    const { location, url, classname, postUrl } = this.props;
+		const url = location === 'frontPage' ? `localhost:3001/${this.props.url}` : this.props.url;
+    const { location, classname, postUrl } = this.props;
 
     if (location === 'editor'){
       return(
@@ -13,6 +14,7 @@ class Thumbnail extends Component {
         </div>
       )
     }
+
 
     return(
       <div className={classname + '__img-wrap img-wrap'}>

@@ -30,12 +30,12 @@ getPostsByTag = (req, res) => {
 savePost = (req, res) => {
 	const imgUrl = req.body.urlToImage;
 	const fileName = getFileName(imgUrl);
-	const dir = __dirname + '/public/imgs';
+	const dir = 'media';
 	if (!fs.existsSync(dir)) fs.mkdirSync(dir, 0744);
 
 	saveImg(imgUrl, fileName, dir);
 
-	req.body.urlToImage = `159.89.126.3/${dir}/${fileName}`;
+	req.body.urlToImage = `${dir}/${fileName}`;
 
   const newEntry = new Entry(req.body);
   newEntry.save()

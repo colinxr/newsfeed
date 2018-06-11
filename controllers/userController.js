@@ -33,7 +33,6 @@ authenticateUser = (req, res, next) => {
 				return false;
 			}
 
-			console.log(user._id);
 			req.session.userId = user._id;
 			res.send({
 				success: true,
