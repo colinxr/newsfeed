@@ -10,8 +10,8 @@ class FeaturedPost extends Component {
     super();
 
     this.renderActionBar = this.renderActionBar.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.apiDelete = this.apiDelete.bind(this);
+    this.handleDelete 	 = this.handleDelete.bind(this);
+    this.apiDelete 			 = this.apiDelete.bind(this);
   }
 
   handleDelete = (e) => {
@@ -42,7 +42,7 @@ class FeaturedPost extends Component {
   }
 
   render() {
-    const featuredPost = this.props.featuredPost;
+    const { featuredPost, isLoggedIn} = this.props.featuredPost;
     return(
       <div className="featured-post">
         <div className="featured-post__img">
@@ -59,7 +59,7 @@ class FeaturedPost extends Component {
           <div className="post-entry__description">
             <p>{ featuredPost.description }</p>
           </div>
-          { this.props.isLoggedIn ? this.renderActionBar() : '' }
+          { isLoggedIn ? this.renderActionBar() : '' }
         </div>
       </div>
     )

@@ -42,7 +42,7 @@ class Post extends Component {
   }
 
   render() {
-    const post = this.props.postInfo;
+    const {post, isLoggedIn} = this.props;
     let date = new Date(Date.parse(post.date));
 
     date = date.toDateString();
@@ -64,7 +64,7 @@ class Post extends Component {
         <div className="post-entry__description">
           <p>{ post.description }</p>
         </div>
-        { this.props.isLoggedIn ? this.renderActionBar() : '' }
+        { isLoggedIn ? this.renderActionBar() : '' }
       </div>
     );
   }

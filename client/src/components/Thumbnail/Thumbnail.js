@@ -7,14 +7,13 @@ class Thumbnail extends Component {
 		const url = location === 'frontPage' ? `localhost:3001/${this.props.url}` : this.props.url;
     const { location, classname, postUrl } = this.props;
 
-    if (location === 'editor'){
+    if (location === 'editor') {
       return(
         <div className={classname + '__img-wrap img-wrap'}>
           <img src={url} alt="" />
         </div>
       )
     }
-
 
     return(
       <div className={classname + '__img-wrap img-wrap'}>
