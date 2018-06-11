@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { authenticateUser } from '../../helpers';
 
 import './FrontPage.css';
 
@@ -15,14 +16,13 @@ class FrontPage extends React.Component {
       posts: [],
       featured: [],
     }
-
-    this.authenticateUser = this.authenticateUser.bind(this);
+		
     this.callApi = this.callApi.bind(this);
     this.removePost = this.removePost.bind(this);
   }
 
   componentDidMount() {
-    this.authenticateUser();
+    if (authenticateUser()) this.setState({ isLoggedIn: true});
 
     this.callApi()
       .then(resp => {
@@ -34,14 +34,6 @@ class FrontPage extends React.Component {
       })
       .catch(err => console.log(err));
   }
-
-	authenticateUser() {
-		const localStorageRef = localStorage.getItem('newsFeedSession');
-		console.log(localStorageRef);
-		if (localStorageRef) {
-			this.setState({isLoggedIn: true});
-		}
-	}
 
   callApi = async () => {
     const response = await axios(`${process.env.REACT_APP_API_URL}/api/posts`);

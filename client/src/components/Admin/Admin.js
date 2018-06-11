@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { authenticateUser } from '../../helpers';
 import { Redirect } from 'react-router-dom'
 import CategoryList from '../CategoryList/CategoryList';
 import ArticleList from '../ArticleList/ArticleList';
@@ -18,29 +19,21 @@ class Admin extends Component {
       isLoading: true,
     }
 
-		this.authenticate = this.authenticate.bind(this);
+		// this.authenticate = this.authenticate.bind(this);
 		this.renderAdminPage = this.renderAdminPage.bind(this);
-		this.renderRedirect = this.renderRedirect.bind(this);
-    this.sendToEditor = this.sendToEditor.bind(this);
-    this.selectCat = this.selectCat.bind(this);
-    this.clearEditor = this.clearEditor.bind(this);
+		this.renderRedirect  = this.renderRedirect.bind(this);
+    this.sendToEditor    = this.sendToEditor.bind(this);
+    this.selectCat 			 = this.selectCat.bind(this);
+    this.clearEditor     = this.clearEditor.bind(this);
   }
 
 	componentDidMount() {
-		this.authenticate();
-	}
-
-	authenticate() {
-		const localStorageRef = localStorage.getItem('newsFeedSession');
-		console.log(localStorageRef);
-		if (localStorageRef) {
-			this.setState({isLoggedIn: true});
-		}
+		if (authenticateUser()) this.setState({isLoggedIn: true});
 	}
 
 	renderRedirect() {
 		if (this.state.redirect) {
-			return (<div>Redirect dummy</div>)
+			return <Redirect to='/register' />
 	 	}
   }
 
