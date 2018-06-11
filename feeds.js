@@ -65,6 +65,11 @@ const feeds = {
   ],
   'usa': [
     // 'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml',
+		{
+			'name': 'buzzfeed-news',
+			'url': 'https://www.buzzfeed.com/usnews.xml',
+			'priority': 5,
+		},
     {
 			'name': 'nyt-politics',
 			'url': 'http://rss.nytimes.com/services/xml/rss/nyt/Politics.xml',
