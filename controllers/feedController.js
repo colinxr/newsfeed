@@ -80,7 +80,8 @@ adminFeed = (req, res) => {
     .map(key => feeds[key])
 	feedList = [].concat.apply([], feedList);
 
-	transformFeedData(res, feedList);
+	transformFeedData(feedList)
+	.then(stories => sendApiData(res, stories));;
 }
 
 categoryFeed = (req, res) => {
@@ -90,24 +91,26 @@ categoryFeed = (req, res) => {
     .keys(feeds[cat])
     .map(key => feeds[cat][key]);
 
-	transformFeedData(res, feedList);
+	transformFeedData(feedList)
+	.then(stories => sendApiData(res, stories));;
 }
 
 singleFeed = (req, res) => {
   const { category, id } = req.params;
 	const singleFeed = feeds[category].filter(feed => feed.name === id);
 
-  transformFeedData(res, singleFeed);
+  transformFeedData(singleFeed)
+		.then(stories => sendApiData(res, stories));
 }
 
-transformFeedData = (res, feedList) => {
+transformFeedData = (feedList) => {
 	// parse the indivdual urls and hold them in this variable
   const promises = feedList.map(feed => parseFeed(feed));
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
-  Bluebird.all(promises)
+  return Bluebird.all(promises)
 		.then(resp => flattenArray(resp))
-		.then(stories => sendApiData(res, stories))
+		.then(arr => sortStoryData(arr))
     .catch(err => res.status(500).send(err.message));
 }
 
@@ -134,7 +137,6 @@ sortStoryData = (arr) => {
 
 sendApiData = (res, stories) => {
 	Bluebird.all(stories)
-		.then(resp => sortStoryData(resp))
 		.then(sortedFeed => res.send(sortedFeed))
 		.catch(err => res.status(500).send(err.message));
 }
