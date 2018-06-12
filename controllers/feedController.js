@@ -110,7 +110,7 @@ transformFeedData = (feedList) => {
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   return Bluebird.all(promises)
 		.then(resp => flattenArray(resp))
-		.then(arr => sortStoryData(arr))
+		.then(arr => reverseChron(arr))
     .catch(err => res.status(500).send(err.message));
 }
 
@@ -119,20 +119,12 @@ flattenArray = (data) => {
 }
 
 // sort stories by reverse chron
-reverseChron = (arr, date) => {
+reverseChron = (arr) => {
+	const date = [`pubdate`];
+	
 	return arr.slice().sort((a, b) => {
 		return a[date] < b[date] ? 1 : -1;
 	});
-}
-
-sortStoryData = (arr) => {
-	const date = [`pubdate`];
-	const sortedFeed = reverseChron(arr, date);
-
-	// To do
-	// remove repeated sources from appearing next to each other
-
-	return sortedFeed;
 }
 
 sendApiData = (res, stories) => {
