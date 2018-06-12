@@ -19,6 +19,7 @@ class Admin extends Component {
       isLoading: true,
     }
 
+		this.setLogIn 			 = this.setLogIn.bind(this);
 		this.renderAdminPage = this.renderAdminPage.bind(this);
 		this.renderRedirect  = this.renderRedirect.bind(this);
     this.sendToEditor    = this.sendToEditor.bind(this);
@@ -28,7 +29,14 @@ class Admin extends Component {
 
 	componentWillMount() {
 		console.log('authenticating');
-		authenticateUser() ? this.setState({ isLoggedIn: true, redirect: false }) : '';
+		authenticateUser() ? this.setLogIn() : '';
+	}
+
+	setLogIn() {
+		this.setState({
+			isLoggedIn: true,
+			redirect: false,
+		});
 	}
 
   sendToEditor = (obj) => {

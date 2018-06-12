@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-// import { authenticateUser } from '../../helpers';
+import { authenticateUser } from '../../helpers';
 
 import './FrontPage.css';
 
@@ -16,30 +16,28 @@ class FrontPage extends React.Component {
       posts: [],
       featured: [],
     }
-		this.authenticateUser = this.authenticateUser.bind(this);
-    this.callApi = this.callApi.bind(this);
+		
+		this.setLogIn = this.setLogIn.bind(this);
+    this.getFrontPagePosts = this.getFrontPagePosts.bind(this);
 		this.setPosts = this.setPosts.bind(this);
     this.removePost = this.removePost.bind(this);
   }
 
   componentDidMount() {
-		this.authenticateUser();
+		authenticateUser() ? this.setLogIn() : '';
 
-    this.callApi()
+    this.getFrontPagePosts()
       .then(resp => {
-        const featured = resp.shift();
-        this.setPosts(resp, featured);
+				const posts = resp;
+        const featured = posts.shift();
+        this.setPosts(posts, featured);
       })
       .catch(err => console.log(err));
   }
 
-	authenticateUser() {
-		const localStorageRef = localStorage.getItem('newsFeedSession');
-		console.log(localStorageRef);
-
-		if (localStorageRef) {
-			this.setState({isLoggedIn: true});
-		}
+	setLogIn() {
+		console.log('logging in');
+		this.setState({ isLoggedIn: true, });
 	}
 
 	setPosts(posts, featured) {
@@ -47,10 +45,9 @@ class FrontPage extends React.Component {
 			posts,
 			featured,
 		});
-		console.log(this.state.posts);
 	}
 
-  callApi = async () => {
+  getFrontPagePosts = async () => {
     const response = await axios(`${process.env.REACT_APP_API_URL}/api/posts`);
     const body = await response.data;
     if (response.status !== 200) throw Error(body.message);
@@ -74,8 +71,6 @@ class FrontPage extends React.Component {
   render() {
     const { posts, featured, isLoggedIn } = this.state;
 
-		console.log(posts);
-
     return (
       <div>
         <header className="header--main">
@@ -92,7 +87,7 @@ class FrontPage extends React.Component {
               Object
               .keys(posts)
               // .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-              .map(key => <Post key={key} index={key} isLoggedIn={isLoggedIn}  postInfo={posts[key]} removePost={this.removePost}/>)
+              .map(key => <Post key={posts[key]._id} index={key} isLoggedIn={isLoggedIn}  postInfo={posts[key]} removePost={this.removePost}/>)
             }
           </div>
         </div>

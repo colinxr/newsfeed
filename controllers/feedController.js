@@ -81,7 +81,8 @@ adminFeed = (req, res) => {
 	feedList = [].concat.apply([], feedList);
 
 	transformFeedData(feedList)
-		.then(stories => sendApiData(res, stories));
+		.then(stories => sendApiData(res, stories))
+		.catch(err => res.status(500).send(err.message));
 }
 
 categoryFeed = (req, res) => {
@@ -92,7 +93,8 @@ categoryFeed = (req, res) => {
     .map(key => feeds[cat][key]);
 
 	transformFeedData(feedList)
-		.then(stories => sendApiData(res, stories));
+		.then(stories => sendApiData(res, stories))
+		.catch(err => res.status(500).send(err.message));
 }
 
 singleFeed = (req, res) => {
@@ -100,7 +102,8 @@ singleFeed = (req, res) => {
 	const singleFeed = feeds[category].filter(feed => feed.name === id);
 
   transformFeedData(singleFeed)
-		.then(stories => sendApiData(res, stories));
+		.then(stories => sendApiData(res, stories))
+		.catch(err => res.status(500).send(err.message));
 }
 
 transformFeedData = (feedList) => {
@@ -128,7 +131,7 @@ reverseChron = (arr) => {
 }
 
 sendApiData = (res, stories) => {
-	Bluebird.all(stories)
+	return Bluebird.all(stories)
 		.then(sortedFeed => res.send(sortedFeed))
 		.catch(err => res.status(500).send(err.message));
 }

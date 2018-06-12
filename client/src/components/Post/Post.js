@@ -47,7 +47,6 @@ class Post extends Component {
   render() {
     const {postInfo, isLoggedIn} = this.props;
     let date = new Date(Date.parse(postInfo.date));
-
     date = date.toDateString();
 
     return (

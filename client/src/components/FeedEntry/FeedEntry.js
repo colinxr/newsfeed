@@ -16,11 +16,15 @@ class FeedEntry extends Component {
     // this.renderEntities = this.renderEntities.bind(this);
   }
 
+	componentDidMount() {
+		// console.log(this.props.articleInfo.description);
+	}
+
   handleClick(e) {
     e.preventDefault();
     const article = this.props.articleInfo;
 
-    const stripTags = article.description ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : '';
+    const stripTags = article.description ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : ' ';
     const decode = this.decodeHtmlEntity(stripTags);
     const excerpt = decode.slice(0,250).trim() + '...';
     const articleImg = this.getImgUrl();
@@ -102,7 +106,8 @@ class FeedEntry extends Component {
 
   render() {
     const article = this.props.articleInfo;
-    const stripTags = article.description ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : '';
+
+    const stripTags = article.description !== null ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : ' ';
     const decode = this.decodeHtmlEntity(stripTags);
     const desc = decode.slice(0,250).trim() + '...';
 
