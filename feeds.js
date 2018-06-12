@@ -25,6 +25,11 @@ const feeds = {
 			'url': 'https://globalnews.ca/canada/feed/',
 			'priority': 5,
 		},
+		{
+			'name': 'national-post',
+			'url': 'http://nationalpost.com/feed/',
+			'priority': 1,
+		}
   ],
   'toronto': [
 		{

@@ -81,7 +81,7 @@ adminFeed = (req, res) => {
 	feedList = [].concat.apply([], feedList);
 
 	transformFeedData(feedList)
-	.then(stories => sendApiData(res, stories));;
+		.then(stories => sendApiData(res, stories));
 }
 
 categoryFeed = (req, res) => {
@@ -92,7 +92,7 @@ categoryFeed = (req, res) => {
     .map(key => feeds[cat][key]);
 
 	transformFeedData(feedList)
-	.then(stories => sendApiData(res, stories));;
+		.then(stories => sendApiData(res, stories));
 }
 
 singleFeed = (req, res) => {
@@ -121,7 +121,7 @@ flattenArray = (data) => {
 // sort stories by reverse chron
 reverseChron = (arr) => {
 	const date = [`pubdate`];
-	
+
 	return arr.slice().sort((a, b) => {
 		return a[date] < b[date] ? 1 : -1;
 	});
