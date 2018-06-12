@@ -34,6 +34,7 @@
   },
   "scripts": {
     "client": "cd client && npm start",
+		"db": "mongod",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others \"mongod\" \"npm run client\" \"npm run server\"",
     "lint": "eslint index.js"

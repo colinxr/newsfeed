@@ -18,17 +18,11 @@ filterByDate = (item) => {
   const now = Date.now();
   const pubDate = Date.parse(item[`pubdate`]);
 
-  if ((now - pubDate) < 86400000) {
-    item.newsMeta = {};
-    return item;
-  }
+  if ((now - pubDate) < 86400000) return item;
 }
 
-// sort stories by reverse chron
-reverseChron = (arr, date) => {
-	return arr.slice().sort((a, b) => {
-		return a[date] < b[date] ? 1 : -1;
-	});
+relevantEntity = (obj) => {
+	return obj.salience > 0.12;
 }
 
 analyzeContent = (item, feed) => {
@@ -41,18 +35,15 @@ analyzeContent = (item, feed) => {
     type: 'PLAIN_TEXT',
   };
 
-  return client
-    .analyzeEntities({ document })
-    .then(results => {
-      relevantEntity = (obj) => {
-        return obj.salience > 0.12;
-      }
-
+  return client.analyzeEntities({ document })
+  	.then(results => {
       const relevant = results[0].entities.filter(relevantEntity);
       const topics = relevant.map(topic => topic.name); // only use names of the entities
+			item.newsMeta = {};
 			item.newsMeta.source = feed;
 			item.newsMeta.entities = topics;
-      return item;
+
+			return item;
     })
    .catch(err => res.status(500).send(err.message));
 }
@@ -70,9 +61,13 @@ parseFeed = (feed) => {
 
   return feedParser.parse(httpConfig, fpConfig)
     .then(items => {
-      let articles = items.filter(item => filterByDate(item)) // filter items by last 24 hours.
+			// filter items by last 24 hours.
+      let articles = items.filter(item => filterByDate(item))
+			// if feed is a low priority, only return the first third of the entries
 			articles = feed.priority > 3 ? articles.slice(0, articles.length / 3) : articles;
+			// for each entry, preform entity analysis
 			articles = articles.map(article => analyzeContent(article, feed));
+
       return articles;
     })
     .catch(err => console.log('Error: ' + err));
@@ -80,14 +75,12 @@ parseFeed = (feed) => {
 
 adminFeed = (req, res) => {
   // take feeds object and pull out all of the individual properties
-  let feedList = Object
+	let feedList = Object
     .keys(feeds)
     .map(key => feeds[key])
-	 feedList = [].concat.apply([], feedList);
+	feedList = [].concat.apply([], feedList);
 
-	 console.log('getting feed data');
-
-	 transformFeedData(res, feedList);
+	transformFeedData(res, feedList);
 }
 
 categoryFeed = (req, res) => {
@@ -102,9 +95,9 @@ categoryFeed = (req, res) => {
 
 singleFeed = (req, res) => {
   const { category, id } = req.params;
-	const singleFeedObj = feeds[category].filter(feed => feed.name === id);
+	const singleFeed = feeds[category].filter(feed => feed.name === id);
 
-  transformFeedData(res, singleFeedObj);
+  transformFeedData(res, singleFeed);
 }
 
 transformFeedData = (res, feedList) => {
@@ -113,28 +106,37 @@ transformFeedData = (res, feedList) => {
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   Bluebird.all(promises)
-    .then(data => {
-      stories = [].concat(...data) // flatten resp into on array of objects
-      return stories;
-    })
-    .then(stories => {
-      Bluebird.all(stories)
-        .then(resp => {
-          const date = [`pubdate`];
-
-          const sortedFeed = reverseChron(resp, date);
-		          // const last = sortedFeed.length - 1;
-		          // console.dir(sortedFeed[last], {depth: null, colors: true});
-							// let count = 0;
-							// sortedFeed.map(i => {
-							// 	if (i.newsMeta.source.name == 'cbc-news-world') count++;
-							// });
-							// console.log(count);
-          res.send(sortedFeed);
-        })
-        .catch(err => res.status(500).send(err.message));
-    })
+		.then(resp => flattenArray(resp))
+		.then(stories => sendApiData(res, stories))
     .catch(err => res.status(500).send(err.message));
+}
+
+flattenArray = (data) => {
+	return flatArray = [].concat(...data);
+}
+
+// sort stories by reverse chron
+reverseChron = (arr, date) => {
+	return arr.slice().sort((a, b) => {
+		return a[date] < b[date] ? 1 : -1;
+	});
+}
+
+sortStoryData = (arr) => {
+	const date = [`pubdate`];
+	const sortedFeed = reverseChron(arr, date);
+
+	// To do
+	// remove repeated sources from appearing next to each other
+
+	return sortedFeed;
+}
+
+sendApiData = (res, stories) => {
+	Bluebird.all(stories)
+		.then(resp => sortStoryData(resp))
+		.then(sortedFeed => res.send(sortedFeed))
+		.catch(err => res.status(500).send(err.message));
 }
 
 module.exports = {

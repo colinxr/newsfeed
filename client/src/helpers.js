@@ -4,5 +4,5 @@ export function authenticateUser() {
 
 	if (localStorageRef) return true;
 
-	return false
+	return false;
 }
