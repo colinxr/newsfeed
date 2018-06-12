@@ -13,6 +13,9 @@ class Post extends Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
 
+	componentDidMount() {
+
+	}
   handleDelete = (e) => {
     e.preventDefault();
     console.log('deleting');
@@ -42,8 +45,8 @@ class Post extends Component {
   }
 
   render() {
-    const {post, isLoggedIn} = this.props;
-    let date = new Date(Date.parse(post.date));
+    const {postInfo, isLoggedIn} = this.props;
+    let date = new Date(Date.parse(postInfo.date));
 
     date = date.toDateString();
 
@@ -53,16 +56,16 @@ class Post extends Component {
           <Thumbnail
             classname="post"
             location="frontPage"
-            postUrl={ post.url }
-            url={ post.urlToImage }
+            postUrl={ postInfo.url }
+            url={ postInfo.urlToImage }
           />
-          <h4>{ post.source }</h4>
-          <h2 className="post-entry__title post-title"><a href={ post.url } target="_blank" className="post-entry__title-link">{ post.title }</a></h2>
-          <TagList tags={ post.entities } />
+				<h4>{ postInfo.source }</h4>
+          <h2 className="post-entry__title post-title"><a href={ postInfo.url } target="_blank" className="post-entry__title-link">{ postInfo.title }</a></h2>
+          <TagList tags={ postInfo.entities } />
           <span className="post-entry__date">{ date }</span>
         </header>
         <div className="post-entry__description">
-          <p>{ post.description }</p>
+          <p>{ postInfo.description }</p>
         </div>
         { isLoggedIn ? this.renderActionBar() : '' }
       </div>

@@ -18,6 +18,7 @@ class FrontPage extends React.Component {
     }
 		this.authenticateUser = this.authenticateUser.bind(this);
     this.callApi = this.callApi.bind(this);
+		this.setPosts = this.setPosts.bind(this);
     this.removePost = this.removePost.bind(this);
   }
 
@@ -27,10 +28,7 @@ class FrontPage extends React.Component {
     this.callApi()
       .then(resp => {
         const featured = resp.shift();
-        this.setState({
-          posts: resp,
-          featured: featured
-        });
+        this.setPosts(resp, featured);
       })
       .catch(err => console.log(err));
   }
@@ -42,6 +40,14 @@ class FrontPage extends React.Component {
 		if (localStorageRef) {
 			this.setState({isLoggedIn: true});
 		}
+	}
+
+	setPosts(posts, featured) {
+		this.setState({
+			posts,
+			featured,
+		});
+		console.log(this.state.posts);
 	}
 
   callApi = async () => {
@@ -68,6 +74,8 @@ class FrontPage extends React.Component {
   render() {
     const { posts, featured, isLoggedIn } = this.state;
 
+		console.log(posts);
+
     return (
       <div>
         <header className="header--main">
@@ -77,12 +85,7 @@ class FrontPage extends React.Component {
         </header>
         <div className="wrapper wrapper--front-page">
 					{
-						featured ?
-          	<FeaturedPost
-	            isLoggedIn={isLoggedIn}
-	            featuredPost={featured}
-	            removePost={this.removePost} /> :
-					  ''
+						featured ?  <FeaturedPost isLoggedIn={isLoggedIn} featuredPost={featured} removePost={this.removePost} /> : ''
 				 }
           <div className="wrapper--front-page__posts">
             {

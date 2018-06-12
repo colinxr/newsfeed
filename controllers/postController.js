@@ -16,9 +16,7 @@ getPosts = (req, res) => {
 getPostsByTag = (req, res) => {
   const tag = req.params.tag
     .split('-')
-    .map(el => {
-      return el = el.charAt(0).toUpperCase() + el.substr(1);
-    })
+    .map(el => el = el.charAt(0).toUpperCase() + el.substr(1))
     .join (' ');
 
   const posts = Entry.find({ entities: tag })
@@ -38,7 +36,8 @@ savePost = (req, res) => {
 	req.body.urlToImage = `${dir}/${fileName}`;
 
   const newEntry = new Entry(req.body);
-  newEntry.save()
+
+	newEntry.save()
     .then(entry => {
       res.send({
         success: true,

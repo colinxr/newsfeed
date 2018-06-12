@@ -135,8 +135,6 @@ sendApiData = (res, stories) => {
 
 module.exports = {
   getCategories,
-  parseFeed,
-  filterByDate,
   analyzeContent,
   adminFeed,
   categoryFeed,

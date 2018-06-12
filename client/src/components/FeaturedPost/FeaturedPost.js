@@ -42,7 +42,8 @@ class FeaturedPost extends Component {
   }
 
   render() {
-    const { featuredPost, isLoggedIn} = this.props.featuredPost;
+    const { featuredPost, isLoggedIn } = this.props;
+
     return(
       <div className="featured-post">
         <div className="featured-post__img">

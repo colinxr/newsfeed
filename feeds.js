@@ -26,8 +26,13 @@ const feeds = {
 			'priority': 5,
 		},
 		{
-			'name': 'national-post',
-			'url': 'http://nationalpost.com/feed/',
+			'name': 'national-post-can',
+			'url': 'http://nationalpost.com/category/news/national/feed',
+			'priority': 1,
+		},
+		{
+			'name': 'national-post-pol',
+			'url': 'http://nationalpost.com/category/news/politics/feed',
 			'priority': 1,
 		}
   ],
@@ -67,6 +72,11 @@ const feeds = {
 			'url':'https://globalnews.ca/toronto/feed/',
 			'priority': 5,
 		},
+		{
+			'name': 'national-post-toronto',
+			'url': 'http://nationalpost.com/category/news/toronto/feed',
+			'priority': 1,
+		}
   ],
   'usa': [
     // 'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml',
