@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import './FeaturedPost.css';
@@ -65,6 +66,12 @@ class FeaturedPost extends Component {
       </div>
     )
   }
+}
+
+FeaturedPost.propTypes = {
+	isLoggedIn: PropTypes.bool.isRequired,
+	featuredPost: PropTypes.object.isRequired,
+	removePost: PropTypes.func.isRequired,
 }
 
 export default FeaturedPost;

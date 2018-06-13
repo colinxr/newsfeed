@@ -34,6 +34,11 @@ const feeds = {
 			'name': 'national-post-pol',
 			'url': 'http://nationalpost.com/category/news/politics/feed',
 			'priority': 1,
+		},
+		{
+			'name': 'the-guardian-can',
+			'url': 'https://www.theguardian.com/world/canada/rss',
+			'priority': 1,
 		}
   ],
   'toronto': [
@@ -79,7 +84,6 @@ const feeds = {
 		}
   ],
   'usa': [
-    // 'buzzfeed-news': 'https://www.buzzfeed.com/usnews.xml',
 		{
 			'name': 'buzzfeed-news',
 			'url': 'https://www.buzzfeed.com/usnews.xml',
@@ -92,7 +96,7 @@ const feeds = {
 		},
     {
 			'name': 'the-atlantic-us',
-			'url': 'https://www.theatlantic.com/feed/channel/national/',
+			'url': 'https://www.theatlantic.com/feed/channel/politics/',
 			'priority': 1,
 		},
     {
@@ -111,6 +115,11 @@ const feeds = {
 			'name': 'cbc-news-world',
 			'url': 'http://rss.cbc.ca/lineup/world.xml',
 			'priority': 5,
+		},
+		{
+			'name': 'the-guardian-world',
+			'url': 'https://www.theguardian.com/world/rss',
+			'priority': 1,
 		},
   ],
 }

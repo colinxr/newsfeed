@@ -1,4 +1,3 @@
-const Bluebird   = require('bluebird');
 const feedParser = require('feedparser-promised');
 const language   = require('@google-cloud/language');
 const feeds      = require('../feeds')
@@ -15,6 +14,8 @@ getCategories = (req, res) => {
 }
 
 filterByDate = (item) => {
+	if (item === null) console.log(item);
+
   const now = Date.now();
   const pubDate = Date.parse(item[`pubdate`]);
 
@@ -45,7 +46,42 @@ analyzeContent = (item, feed) => {
 
 			return item;
     })
-   .catch(err => res.status(500).send(err.message));
+   .catch(err => err);
+}
+
+adminFeed = (req, res) => {
+  // take feeds object and pull out all of the individual properties
+	let feedList = Object
+    .keys(feeds)
+    .map(key => feeds[key])
+	feedList = [].concat.apply([], feedList);
+
+	transformFeedData(feedList)
+		.then(stories => sendApiData(res, stories))
+		.catch(err => res.status(503).send(err.message));
+}
+
+categoryFeed = (req, res) => {
+  // get the category
+  const cat = req.params.category;
+  const feedList = Object
+    .keys(feeds[cat])
+    .map(key => feeds[cat][key]);
+
+	transformFeedData(feedList)
+		.then(stories => sendApiData(res, stories))
+		.catch(err => res.status(500).send(err));
+}
+
+singleFeed = (req, res) => {
+  const { category, id } = req.params;
+	const singleFeed = feeds[category].filter(feed => feed.name === id);
+
+  transformFeedData(singleFeed)
+		.then(stories => sendApiData(res, stories))
+		.catch(err => {
+			res.status(503).send(err)
+		});
 }
 
 parseFeed = (feed) => {
@@ -66,55 +102,23 @@ parseFeed = (feed) => {
 			// if feed is a low priority, only return the first third of the entries
 			articles = feed.priority > 3 ? articles.slice(0, articles.length / 3) : articles;
 			// for each entry, preform entity analysis
-			articles = articles.map(article => analyzeContent(article, feed));
+			// articles = articles.map(article => analyzeContent(article, feed));
 
       return articles;
     })
-    .catch(err => console.log('Error: ' + err));
-}
-
-adminFeed = (req, res) => {
-  // take feeds object and pull out all of the individual properties
-	let feedList = Object
-    .keys(feeds)
-    .map(key => feeds[key])
-	feedList = [].concat.apply([], feedList);
-
-	transformFeedData(feedList)
-		.then(stories => sendApiData(res, stories))
-		.catch(err => res.status(500).send(err.message));
-}
-
-categoryFeed = (req, res) => {
-  // get the category
-  const cat = req.params.category;
-  const feedList = Object
-    .keys(feeds[cat])
-    .map(key => feeds[cat][key]);
-
-	transformFeedData(feedList)
-		.then(stories => sendApiData(res, stories))
-		.catch(err => res.status(500).send(err.message));
-}
-
-singleFeed = (req, res) => {
-  const { category, id } = req.params;
-	const singleFeed = feeds[category].filter(feed => feed.name === id);
-
-  transformFeedData(singleFeed)
-		.then(stories => sendApiData(res, stories))
-		.catch(err => res.status(500).send(err.message));
+    .catch(err => console.dir('Feed Parser Error: ' + err));
 }
 
 transformFeedData = (feedList) => {
 	// parse the indivdual urls and hold them in this variable
-  const promises = feedList.map(feed => parseFeed(feed));
+
+	const feeds = feedList.map(feed => parseFeed(feed));
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
-  return Bluebird.all(promises)
+  return Promise.all(feeds)
 		.then(resp => flattenArray(resp))
 		.then(arr => reverseChron(arr))
-    .catch(err => res.status(500).send(err.message));
+    .catch(err => res.status(501).send(err));
 }
 
 flattenArray = (data) => {
@@ -131,9 +135,12 @@ reverseChron = (arr) => {
 }
 
 sendApiData = (res, stories) => {
-	return Bluebird.all(stories)
-		.then(sortedFeed => res.send(sortedFeed))
-		.catch(err => res.status(500).send(err.message));
+	return Promise.all(stories)
+	.then(stories => res.send(stories))
+	.catch(err => {
+		console.log(err);
+		res.status(599).send(err.message)
+	});
 }
 
 module.exports = {

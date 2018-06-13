@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import './CategoryList.css';
@@ -42,7 +43,7 @@ class CategoryList extends Component {
   }
 
   render() {
-    const categories = this.state.categories;
+    const {categories} = this.state;
 
     return (
       <ul className="category-list">
@@ -59,6 +60,10 @@ class CategoryList extends Component {
       </ul>
     )
   }
+}
+
+CategoryList.propTypes = {
+	selectCat: PropTypes.func.isRequired,
 }
 
 export default CategoryList;

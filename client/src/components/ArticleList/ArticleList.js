@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import './ArticleList.css';
@@ -83,6 +84,7 @@ class ArticleList extends Component {
 
   render() {
     const { isLoading, errMessage, articles } = this.state;
+		console.log(articles.length);
 
     if (isLoading === true) {
       return (
@@ -112,7 +114,8 @@ class ArticleList extends Component {
             Object
             .keys(articles)
             .map(key =>
-              <FeedEntry key={key} index={key}
+              <FeedEntry key={key}
+								index={key}
                 articleInfo={articles[key]}
                 sendToEditor={this.props.sendToEditor}/>
             )
@@ -121,6 +124,11 @@ class ArticleList extends Component {
       );
     }
   }
+}
+
+ArticleList.propTypes = {
+	category: PropTypes.string.isRequired,
+	sendToEditor: PropTypes.func.isRequired,
 }
 
 export default ArticleList;

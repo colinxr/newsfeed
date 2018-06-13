@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './TagList.css';
 
@@ -24,6 +25,10 @@ class TagList extends Component {
       </ul>
     );
   }
+}
+
+TagList.propTypes = {
+	tags: PropTypes.array.isRequired,
 }
 
 export default TagList;

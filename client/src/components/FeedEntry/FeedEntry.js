@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import './FeedEntry.css';
@@ -16,39 +17,28 @@ class FeedEntry extends Component {
     // this.renderEntities = this.renderEntities.bind(this);
   }
 
-	componentDidMount() {
-		// console.log(this.props.articleInfo.description);
-	}
-
   handleClick(e) {
     e.preventDefault();
-    const article = this.props.articleInfo;
+    const { articleInfo } = this.props;
 
-    const stripTags = article.description ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : ' ';
+    const stripTags = articleInfo.description ? articleInfo.description.replace(/(<([^>]+)>)/ig,"").trim() : ' ';
     const decode = this.decodeHtmlEntity(stripTags);
     const excerpt = decode.slice(0,250).trim() + '...';
     const articleImg = this.getImgUrl();
 
     const articleObj = {
-      date: article.pubDate,
+      date: articleInfo.pubDate,
       excerpt: excerpt,
       description: stripTags,
-      originalTitle: article.title,
-      title: article.title,
-      source: article.meta.title,
-      entities: article.newsMeta.entities,
-      url: article.link,
+      originalTitle: articleInfo.title,
+      title: articleInfo.title,
+      source: articleInfo.meta.title,
+      entities: articleInfo.newsMeta.entities,
+      url: articleInfo.link,
       urlToImage: articleImg
     }
 
     this.props.sendToEditor(articleObj);
-
-    // this.apiPost(articleObj)
-    //   .then(res => {
-    //     console.log(res);
-    //   }).catch(err => {
-    //     console.log(err);
-    //   });
   }
 
   apiPost = async (obj) => {
@@ -62,25 +52,28 @@ class FeedEntry extends Component {
   }
 
   getImgUrl() {
-    const article = this.props.articleInfo;
+    const { articleInfo } = this.props;
+
+		if (articleInfo == undefined) return false;
+
     let imgUrl;
 
-    if (article.image.url) {
-      imgUrl = article.image.url;
+    if (articleInfo.image.url) {
+      imgUrl = articleInfo.image.url;
       return imgUrl;
     }
 
-    const imgInDesc = article.description ? article.description.includes('<img src=') : false;
+    const imgInDesc = articleInfo.description !== null || articleInfo.description !== undefined ? articleInfo.description.includes('<img src=') : false;
     if (imgInDesc) {
-      const desc = article.description;
+      const desc = articleInfo.description;
       const regex = /<img.*?src=['"](.*?)['"]/;
       const imgUrl = regex.exec(desc)[1];;
 
       return imgUrl;
     }
 
-    if (article.enclosures.length) {
-      let imgUrl = article.enclosures[0].url;
+    if (articleInfo.enclosures.length) {
+      let imgUrl = articleInfo.enclosures[0].url;
       return imgUrl;
     }
   }
@@ -91,30 +84,47 @@ class FeedEntry extends Component {
     });
   }
 
-  // renderEntities() {
-  //   const entities = this.props.articleInfo.newsMeta.entities;
-  //
-  //   return(
-  //     <ul className="header__meta__topics">{
-  //         entities.map((item, i) =>
-  //           <li key={i}><p>{item}</p></li>
-  //         )
-  //       }</ul>
-  //   )
-  //
-  // }
+  renderEntities() {
+    const entities = this.props.articleInfo.newsMeta.entities;
+
+    return(
+      <ul className="header__meta__topics">{
+          entities.map((item, i) =>
+            <li key={i}><p>{item}</p></li>
+          )
+        }</ul>
+    )
+  }
 
   render() {
-    const article = this.props.articleInfo;
+    const { articleInfo } = this.props;
 
-    const stripTags = article.description !== null ? article.description.replace(/(<([^>]+)>)/ig,"").trim() : ' ';
+		if (articleInfo == null) {
+			console.log("err" + articleInfo);
+			return (
+				<div>
+					<p>There's been a weird weird error! wtfff!</p>
+			</div>
+			)
+		}
+
+		if (articleInfo.description === undefined || articleInfo.description === null) {
+			console.log('weirdErr' + articleInfo);
+			return (
+				<div>
+					<p>There's been a weird weird error! harumph!</p>
+			</div>
+			)
+		}
+
+    const stripTags = articleInfo.description !== null ? articleInfo.description.replace(/(<([^>]+)>)/ig,"").trim() : null;
     const decode = this.decodeHtmlEntity(stripTags);
     const desc = decode.slice(0,250).trim() + '...';
 
     const articleImg = this.getImgUrl();
 
-    if (article.enclosures[0]) {
-      const articleImg = article.enclosures[0];
+    if (articleInfo.enclosures[0]) {
+      const articleImg = articleInfo.enclosures[0];
     }
 
     return (
@@ -126,9 +136,9 @@ class FeedEntry extends Component {
         />
         <div className="feed-entry__body">
           <header>
-            <h2 className="feed-entry__title article-title"><a href={article.link} className="feed-entry__title-link" target="_blank">{article.title}</a></h2>
+            <h2 className="feed-entry__title article-title"><a href={articleInfo.link} className="feed-entry__title-link" target="_blank">{articleInfo.title}</a></h2>
             <div className="header__meta">
-              <h4>{article.meta.title}</h4>
+              <h4>{articleInfo.meta.title}</h4>
               {/*this.renderEntities()*/}
             </div>
           </header>
@@ -140,6 +150,12 @@ class FeedEntry extends Component {
       </div>
     );
   }
+}
+
+FeedEntry.propTypes = {
+	index: PropTypes.string,
+	articleInfo: PropTypes.object.isRequired,
+	sendToEditor: PropTypes.func.isRequired,
 }
 
 export default FeedEntry;

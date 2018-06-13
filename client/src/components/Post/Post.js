@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import './Post.css';
@@ -55,21 +56,29 @@ class Post extends Component {
           <Thumbnail
             classname="post"
             location="frontPage"
-            postUrl={ postInfo.url }
-            url={ postInfo.urlToImage }
+            postUrl={postInfo.url}
+            url={postInfo.urlToImage}
           />
-				<h4>{ postInfo.source }</h4>
-          <h2 className="post-entry__title post-title"><a href={ postInfo.url } target="_blank" className="post-entry__title-link">{ postInfo.title }</a></h2>
-          <TagList tags={ postInfo.entities } />
-          <span className="post-entry__date">{ date }</span>
+				<h4>{postInfo.source}</h4>
+          <h2 className="post-entry__title post-title"><a href={postInfo.url} target="_blank" className="post-entry__title-link">{postInfo.title}</a></h2>
+          <TagList tags={postInfo.entities} />
+          <span className="post-entry__date">{date}</span>
         </header>
         <div className="post-entry__description">
-          <p>{ postInfo.description }</p>
+          <p>{postInfo.description}</p>
         </div>
-        { isLoggedIn ? this.renderActionBar() : '' }
+        {isLoggedIn ? this.renderActionBar() : ''}
       </div>
     );
   }
+}
+
+Post.propTypes = {
+	key: PropTypes.string.isRequired,
+	index: PropTypes.number.isRequired,
+	isLoggedIn: PropTypes.bool.isRequired,
+	postInfo: PropTypes.object.isRequired,
+	removePost: PropTypes.func.isRequired,
 }
 
 export default Post;
