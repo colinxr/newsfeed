@@ -3,7 +3,7 @@ const reverseChron = require('../controllers/feedController').reverseChron;
 
 
 describe('reverseChron()', () => {
-	it('should reverse a an array of objects based on time', () => {
+	it('Should reverse a an array of objects based on time', () => {
 		const testArr = [
 			{
 				item: 1,

@@ -59,7 +59,11 @@ adminFeed = (req, res) => {
 	feedList = [].concat.apply([], feedList);
 
 	transformFeedData(feedList)
-		.then(stories => sendApiData(res, stories))
+		.then(stories => {
+			console.log(typeof stories);
+			console.log(stories.length);
+			return sendData(res, stories)
+		})
 		.catch(err => res.status(503).send(err.message));
 }
 
@@ -71,7 +75,7 @@ categoryFeed = (req, res) => {
     .map(key => feeds[cat][key]);
 
 	transformFeedData(feedList)
-		.then(stories => sendApiData(res, stories))
+		.then(stories => sendData(res, stories))
 		.catch(err => res.status(500).send(err));
 }
 
@@ -80,13 +84,13 @@ singleFeed = (req, res) => {
 	const singleFeed = feeds[category].filter(feed => feed.name === id);
 
   transformFeedData(singleFeed)
-		.then(stories => sendApiData(res, stories))
+		.then(stories => sendData(res, stories))
 		.catch(err => {
 			res.status(503).send(err)
 		});
 }
 
-parseFeed = (feed) => {
+parseRSS = (feed) => {
   const httpConfig = {
     uri: feed.url,
     gzip: true,
@@ -113,14 +117,11 @@ parseFeed = (feed) => {
 
 transformFeedData = (feedList) => {
 	// parse the indivdual urls and hold them in this variable
-
-	const feeds = feedList.map(feed => parseFeed(feed));
-	console.log(typeof feeds);
+	const feeds = feedList.map(feed => parseRSS(feed));
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   return Promise.all(feeds)
 		.then(resp => {
-			console.log(resp[0]);
 			return flattenArray(resp)
 		})
 		.then(arr => reverseChron(arr))
@@ -139,7 +140,7 @@ reverseChron = (arr) => {
 	});
 }
 
-sendApiData = (res, stories) => {
+sendData = (res, stories) => {
 	return Promise.all(stories)
 	.then(stories => res.send(stories))
 	.catch(err => {
@@ -155,7 +156,7 @@ module.exports = {
 	filterByDate,
 	flattenArray,
 	getCategories,
-	parseFeed,
+	parseRSS,
 	transformFeedData,
 	reverseChron,
   singleFeed

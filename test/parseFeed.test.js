@@ -1,10 +1,11 @@
-const chai = require('chai');
-const expect = chai.expect;
-const chaiAsPromised = require("chai-as-promised");
-const parseFeed = require('../controllers/feedController').parseFeed;
+const chai 				   = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const parseRSS 		 = require('../controllers/feedController').parseRSS;
+const expect 				 = chai.expect;
 
 chai.use(chaiAsPromised);
-describe('parseFeed()', () => {
+
+describe('parseRSS()', () => {
 	it('Should return a promise containing an RSS feed', () => {
 
 		const testFeed = {
@@ -13,7 +14,7 @@ describe('parseFeed()', () => {
 			'priority': 1,
 		}
 
-		const rssFeed = parseFeed(testFeed);
+		const rssFeed = parseRSS(testFeed);
 
 		expect(rssFeed).to.be.a('promise');
 		return expect(rssFeed).to.eventually.be.an('array');
