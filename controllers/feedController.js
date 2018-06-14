@@ -3,7 +3,7 @@ const language   = require('@google-cloud/language');
 const feeds      = require('../feeds')
 const Entry      = require('../models/Entry');
 
-const client     = new language.LanguageServiceClient()
+// const client     = new language.LanguageServiceClient();
 
 getCategories = (req, res) => {
   const feedCats = Object
@@ -14,8 +14,6 @@ getCategories = (req, res) => {
 }
 
 filterByDate = (item) => {
-	if (item === null) console.log(item);
-
   const now = Date.now();
   const pubDate = Date.parse(item[`pubdate`]);
 
@@ -27,26 +25,30 @@ relevantEntity = (obj) => {
 }
 
 analyzeContent = (item, feed) => {
-  const title = item.title;
-  const desc = item.summary ? item.summary.replace(/(<([^>]+)>)/ig,"") : '';
-  const text = `${title}. ${desc}`;
+  // const title = item.title;
+  // const desc = item.summary ? item.summary.replace(/(<([^>]+)>)/ig,"") : '';
+  // const text = `${title}. ${desc}`;
+	//
+  // const document = {
+  //   content: text,
+  //   type: 'PLAIN_TEXT',
+  // };
+	//
+  // return client.analyzeEntities({ document })
+  // 	.then(results => {
+  //     const relevant = results[0].entities.filter(relevantEntity);
+  //     const topics = relevant.map(topic => topic.name); // only use names of the entities
+	// 		item.newsMeta = {};
+	// 		item.newsMeta.source = feed;
+	// 		item.newsMeta.entities = topics;
+	//
+	// 		return item;
+  //   })
+  //  .catch(err => err);
+	item.newsMeta = {};
+	item.newsMeta.source = feed;
 
-  const document = {
-    content: text,
-    type: 'PLAIN_TEXT',
-  };
-
-  return client.analyzeEntities({ document })
-  	.then(results => {
-      const relevant = results[0].entities.filter(relevantEntity);
-      const topics = relevant.map(topic => topic.name); // only use names of the entities
-			item.newsMeta = {};
-			item.newsMeta.source = feed;
-			item.newsMeta.entities = topics;
-
-			return item;
-    })
-   .catch(err => err);
+	return item;
 }
 
 adminFeed = (req, res) => {
@@ -102,7 +104,7 @@ parseFeed = (feed) => {
 			// if feed is a low priority, only return the first third of the entries
 			articles = feed.priority > 3 ? articles.slice(0, articles.length / 3) : articles;
 			// for each entry, preform entity analysis
-			// articles = articles.map(article => analyzeContent(article, feed));
+			articles = articles.map(article => analyzeContent(article, feed));
 
       return articles;
     })
@@ -128,7 +130,6 @@ flattenArray = (data) => {
 // sort stories by reverse chron
 reverseChron = (arr) => {
 	const date = [`pubdate`];
-
 	return arr.slice().sort((a, b) => {
 		return a[date] < b[date] ? 1 : -1;
 	});
@@ -145,6 +146,10 @@ sendApiData = (res, stories) => {
 
 module.exports = {
   getCategories,
+	filterByDate,
+	reverseChron,
+	flattenArray,
+	transformFeedData,
   analyzeContent,
   adminFeed,
   categoryFeed,

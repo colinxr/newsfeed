@@ -1,6 +1,6 @@
 {
   "name": "newsfeed",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@google-cloud/language": "1.1.0",
@@ -23,19 +23,22 @@
     "save": "^2.3.2"
   },
   "devDependencies": {
+    "chai": "4.1.2",
     "concurrently": "3.0.0",
     "eslint": "4.18.2",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "7.7.0"
+    "eslint-plugin-react": "7.7.0",
+    "mocha": "5.2.0"
   },
   "scripts": {
     "client": "cd client && npm start",
-		"db": "mongod",
+    "db": "mongod",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others \"mongod\" \"npm run client\" \"npm run server\"",
-    "lint": "eslint index.js"
+    "lint": "eslint index.js",
+		"test": "mocha"
   }
 }
