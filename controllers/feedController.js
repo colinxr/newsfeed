@@ -115,10 +115,14 @@ transformFeedData = (feedList) => {
 	// parse the indivdual urls and hold them in this variable
 
 	const feeds = feedList.map(feed => parseFeed(feed));
+	console.log(typeof feeds);
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   return Promise.all(feeds)
-		.then(resp => flattenArray(resp))
+		.then(resp => {
+			console.log(resp[0]);
+			return flattenArray(resp)
+		})
 		.then(arr => reverseChron(arr))
     .catch(err => res.status(501).send(err));
 }
@@ -145,13 +149,14 @@ sendApiData = (res, stories) => {
 }
 
 module.exports = {
-  getCategories,
-	filterByDate,
-	reverseChron,
-	flattenArray,
-	transformFeedData,
-  analyzeContent,
   adminFeed,
+	analyzeContent,
   categoryFeed,
+	filterByDate,
+	flattenArray,
+	getCategories,
+	parseFeed,
+	transformFeedData,
+	reverseChron,
   singleFeed
 }
