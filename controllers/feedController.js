@@ -5,6 +5,45 @@ const Entry      = require('../models/Entry');
 
 // const client     = new language.LanguageServiceClient();
 
+adminFeed = (req, res) => {
+  // take feeds object and pull out all of the individual properties
+	let feedList = Object
+    .keys(feeds)
+    .map(key => feeds[key])
+	feedList = [].concat.apply([], feedList);
+
+	transformFeedData(feedList)
+		.then(stories => {
+			console.log(typeof stories);
+			console.log(stories.length);
+			return sendData(res, stories)
+		})
+		.catch(err => res.status(503).send(err.message));
+}
+
+categoryFeed = (req, res) => {
+  // get the category
+  const cat = req.params.category;
+  const feedList = Object
+    .keys(feeds[cat])
+    .map(key => feeds[cat][key]);
+
+	transformFeedData(feedList)
+		.then(stories => sendData(res, stories))
+		.catch(err => res.status(500).send(err));
+}
+
+singleFeed = (req, res) => {
+  const { category, id } = req.params;
+	const singleFeed = feeds[category].filter(feed => feed.name === id);
+
+  transformFeedData(singleFeed)
+		.then(stories => sendData(res, stories))
+		.catch(err => {
+			res.status(503).send(err)
+		});
+}
+
 getCategories = (req, res) => {
   const feedCats = Object
     .keys(feeds)
@@ -51,45 +90,6 @@ analyzeContent = (item, feed) => {
 	return item;
 }
 
-adminFeed = (req, res) => {
-  // take feeds object and pull out all of the individual properties
-	let feedList = Object
-    .keys(feeds)
-    .map(key => feeds[key])
-	feedList = [].concat.apply([], feedList);
-
-	transformFeedData(feedList)
-		.then(stories => {
-			console.log(typeof stories);
-			console.log(stories.length);
-			return sendData(res, stories)
-		})
-		.catch(err => res.status(503).send(err.message));
-}
-
-categoryFeed = (req, res) => {
-  // get the category
-  const cat = req.params.category;
-  const feedList = Object
-    .keys(feeds[cat])
-    .map(key => feeds[cat][key]);
-
-	transformFeedData(feedList)
-		.then(stories => sendData(res, stories))
-		.catch(err => res.status(500).send(err));
-}
-
-singleFeed = (req, res) => {
-  const { category, id } = req.params;
-	const singleFeed = feeds[category].filter(feed => feed.name === id);
-
-  transformFeedData(singleFeed)
-		.then(stories => sendData(res, stories))
-		.catch(err => {
-			res.status(503).send(err)
-		});
-}
-
 parseRSS = (feed) => {
   const httpConfig = {
     uri: feed.url,
@@ -121,9 +121,7 @@ transformFeedData = (feedList) => {
 
   // once all promises return values, flatten them in one array, sort it then send off to front-end
   return Promise.all(feeds)
-		.then(resp => {
-			return flattenArray(resp)
-		})
+		.then(resp => flattenArray(resp))
 		.then(arr => reverseChron(arr))
     .catch(err => res.status(501).send(err));
 }
@@ -151,13 +149,14 @@ sendData = (res, stories) => {
 
 module.exports = {
   adminFeed,
-	analyzeContent,
   categoryFeed,
+	singleFeed,
+	analyzeContent,
 	filterByDate,
 	flattenArray,
 	getCategories,
 	parseRSS,
-	transformFeedData,
 	reverseChron,
-  singleFeed
+	transformFeedData,
+	sendData,
 }
